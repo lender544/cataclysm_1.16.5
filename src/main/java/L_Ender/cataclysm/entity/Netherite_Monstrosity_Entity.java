@@ -90,6 +90,7 @@ public class Netherite_Monstrosity_Entity extends Boss_monster {
         this.stepHeight = 1.75F;
         this.dropAfterDeathAnim = true;
         this.setPathPriority(PathNodeType.LAVA, 8.0F);
+        this.setPathPriority(PathNodeType.UNPASSABLE_RAIL, 0.0F);
         this.setPathPriority(PathNodeType.WATER, -1.0F);
         this.setPathPriority(PathNodeType.DANGER_FIRE, 0.0F);
         this.setPathPriority(PathNodeType.DAMAGE_FIRE, 0.0F);

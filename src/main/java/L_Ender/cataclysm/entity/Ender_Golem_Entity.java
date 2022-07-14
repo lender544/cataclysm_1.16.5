@@ -68,6 +68,7 @@ public class Ender_Golem_Entity extends Boss_monster {
         super(entity, world);
         this.experienceValue = 15;
         this.stepHeight = 1.5F;
+        this.setPathPriority(PathNodeType.UNPASSABLE_RAIL, 0.0F);
         this.setPathPriority(PathNodeType.WATER, -1.0F);
         setConfigattribute(this, CMConfig.EnderGolemHealthMultiplier, CMConfig.EnderGolemDamageMultiplier);
     }

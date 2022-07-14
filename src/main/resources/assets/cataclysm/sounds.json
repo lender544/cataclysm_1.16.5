@@ -128,6 +128,96 @@
       }
     ]
   },
+  "ignis_shield_break": {
+    "subtitle": "ignisshieldbreak.sub",
+    "sounds": [
+      {
+        "name": "cataclysm:entity/ignis_shield01"
+      },
+      {
+        "name": "cataclysm:entity/ignis_shield02"
+      },
+      {
+        "name": "cataclysm:entity/ignis_shield03"
+      }
+    ]
+  },
+  "ignis_impact": {
+    "subtitle": "ignisimpact.sub",
+    "sounds": [
+      {
+        "name": "cataclysm:entity/ignis_impact"
+      },
+      {
+        "name": "cataclysm:entity/ignis_impact2"
+      },
+      {
+        "name": "cataclysm:entity/ignis_impact3"
+      }
+    ]
+  },
+  "ignis_armor_break": {
+    "subtitle": "ignis_armor_break.sub",
+    "sounds": [
+      {
+        "name": "cataclysm:entity/ignis_impact"
+      },
+      {
+        "name": "cataclysm:entity/ignis_impact2"
+      },
+      {
+        "name": "cataclysm:entity/ignis_impact3"
+      }
+    ]
+  },
+  "ignis_hurt": {
+    "subtitle": "ignis_hurt.sub",
+    "sounds": [
+      {
+        "name": "cataclysm:entity/ignis_hurt",
+        "volume": 1.0, "pitch": 0.5
+      },
+      {
+        "name": "cataclysm:entity/ignis_hurt2",
+        "volume": 1.0, "pitch": 0.5
+      },
+      {
+        "name": "cataclysm:entity/ignis_hurt3",
+        "volume": 1.0, "pitch": 0.5
+      },
+      {
+        "name": "cataclysm:entity/ignis_hurt4",
+        "volume": 1.0, "pitch": 0.5
+      }
+    ]
+  },
+  "ignis_poke": {
+    "subtitle": "ignis_poke.sub",
+    "sounds": [
+      {
+        "name": "cataclysm:entity/ignis_poke"
+      },
+      {
+        "name": "cataclysm:entity/ignis_poke2"
+      },
+      {
+        "name": "cataclysm:entity/ignis_poke3"
+      },
+      {
+        "name": "cataclysm:entity/ignis_poke4"
+      }
+    ]
+  },
+  "ignis_death": {
+    "subtitle": "ignis_death.sub",
+    "sounds": [
+      {
+        "name": "cataclysm:entity/ignis_death",
+        "volume": 1.0, "pitch": 0.8
+      }
+
+    ]
+  },
   "monstrosityland": {
     "subtitle": "monstrosityland.sub",
     "sounds": [
@@ -148,7 +238,7 @@
     "subtitle": "flamethrower.sub",
     "sounds": [
       "mob/ghast/fireball4"
-      ]
+    ]
   },
   "hammertime": {
     "subtitle": "hammertime.sub",
@@ -159,7 +249,7 @@
   "endermaptera_ambient": {
     "subtitle": "endermaptera_ambient.sub",
     "sounds": [
-       "mob/spider/say1", "mob/spider/say2", "mob/spider/say3", "mob/spider/say4"
+      "mob/spider/say1", "mob/spider/say2", "mob/spider/say3", "mob/spider/say4"
     ]
   },
   "endermaptera_hurt": {

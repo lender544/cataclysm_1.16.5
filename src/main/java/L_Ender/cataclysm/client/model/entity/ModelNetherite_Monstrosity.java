@@ -619,9 +619,15 @@ public class ModelNetherite_Monstrosity extends AdvancedEntityModel<Netherite_Mo
 
 
 		this.faceTarget(netHeadYaw, headPitch, 1, head);
-		this.walk(leftleg, walkSpeed, walkDegree * 1.0F, true, 0F, 0F, limbSwing, limbSwingAmount);
+		this.walk(leftleg, walkSpeed, walkDegree * 1.0F, false, -25F, 0F, limbSwing, limbSwingAmount);
 		this.flap(root, walkSpeed, walkDegree * 0.1F, false, 0F, 0F, limbSwing, limbSwingAmount);
-		this.walk(rightleg, walkSpeed, walkDegree * 1.0F, false, 0F, 0F, limbSwing, limbSwingAmount);
+		this.walk(rightleg, walkSpeed, walkDegree * 1.0F, true, -25F, 0F, limbSwing, limbSwingAmount);
+		float leftLegS = (float) (Math.sin((double) (limbSwing * walkSpeed) - 2.5F) * (double) limbSwingAmount * (double) walkDegree - (double) (limbSwingAmount * walkDegree));
+		float rightLegS = (float) (Math.sin(-(double) (limbSwing * walkSpeed) + 2.5F) * (double) limbSwingAmount * (double) walkDegree - (double) (limbSwingAmount * walkDegree));
+		this.leftleg.rotationPointY += 6F * leftLegS;
+		this.rightleg.rotationPointY += 6F * rightLegS;
+		this.leftleg.rotationPointZ += 8F * leftLegS;
+		this.rightleg.rotationPointZ += 8F * rightLegS;
 		this.walk(leftarm, walkSpeed, walkDegree * 0.5F, false, 0F, 0F, limbSwing, limbSwingAmount);
 		this.walk(rightarm, walkSpeed, walkDegree * 0.5F, true, 0F, 0F, limbSwing, limbSwingAmount);
 		this.walk(jaw, jawSpeed, walkDegree * 0.8F, true, 0F, -0.4F, limbSwing, limbSwingAmount);
