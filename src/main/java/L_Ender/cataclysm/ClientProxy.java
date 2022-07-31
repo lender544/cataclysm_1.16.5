@@ -3,6 +3,7 @@ package L_Ender.cataclysm;
 import L_Ender.cataclysm.client.event.ClientEvent;
 import L_Ender.cataclysm.client.model.armor.ModelIgnitium_Armor;
 import L_Ender.cataclysm.client.model.armor.ModelMonstrousHelm;
+import L_Ender.cataclysm.client.particle.SoulLavaParticle;
 import L_Ender.cataclysm.client.render.CMItemstackRenderer;
 import L_Ender.cataclysm.client.render.entity.*;
 import L_Ender.cataclysm.client.sound.SoundEnderGuardianMusic;
@@ -12,6 +13,7 @@ import L_Ender.cataclysm.entity.Ender_Guardian_Entity;
 import L_Ender.cataclysm.entity.Netherite_Monstrosity_Entity;
 import L_Ender.cataclysm.init.ModEntities;
 import L_Ender.cataclysm.init.ModItems;
+import L_Ender.cataclysm.init.ModParticle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
@@ -144,5 +146,11 @@ public class ClientProxy extends CommonProxy {
 
 
     }
+
+    public void setupParticles() {
+        cataclysm.LOGGER.debug("Registered particle factories");
+        Minecraft.getInstance().particles.registerFactory(ModParticle.SOUL_LAVA.get(), SoulLavaParticle.Factory::new);
+    }
+
 
 }

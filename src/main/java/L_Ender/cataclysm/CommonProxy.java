@@ -38,5 +38,7 @@ public class CommonProxy {
     public void onEntityStatus(Entity entity, byte updateKind) {
     }
 
+    public void setupParticles() {
+    }
 
 }

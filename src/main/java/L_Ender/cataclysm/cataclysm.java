@@ -10,6 +10,7 @@ import L_Ender.cataclysm.util.Cataclysm_Group;
 import L_Ender.cataclysm.util.Modcompat;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -58,6 +59,7 @@ public class cataclysm {
         ModItems.ITEMS.register(bus);
         ModEffect.EFFECTS.register(bus);
         ModBlocks.BLOCKS.register(bus);
+        ModParticle.PARTICLE.register(bus);
         ModTileentites.TILE_ENTITY_TYPES.register(bus);
         ModEntities.ENTITY_TYPE.register(bus);
         ModStructures.STRUCTURE_FEATURES.register(bus);
@@ -76,6 +78,10 @@ public class cataclysm {
         if (config.getSpec() == ConfigHolder.COMMON_SPEC) {
             CMConfig.bake(config);
         }
+    }
+
+    private void setupParticleEvent(ParticleFactoryRegisterEvent event) {
+        PROXY.setupParticles();
     }
 
     private void setupClient(FMLClientSetupEvent event) {

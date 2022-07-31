@@ -6,6 +6,7 @@ import L_Ender.cataclysm.entity.effect.ScreenShake_Entity;
 import L_Ender.cataclysm.entity.etc.CMPathNavigateGround;
 import L_Ender.cataclysm.entity.etc.SmartBodyHelper2;
 import L_Ender.cataclysm.init.ModEffect;
+import L_Ender.cataclysm.init.ModParticle;
 import L_Ender.cataclysm.init.ModSounds;
 import L_Ender.cataclysm.init.ModTag;
 import com.github.alexthe666.citadel.animation.Animation;
@@ -178,6 +179,7 @@ public class Ignis_Entity extends Boss_monster {
         this.goalSelector.addGoal(1, new AttackAnimationGoal1<>(this,PHASE_3,34,true));
         this.goalSelector.addGoal(1, new AttackAnimationGoal1<>(this,SWING_UPPERSLASH,23,true));
         this.goalSelector.addGoal(1, new AttackAnimationGoal1<>(this,BREAK_THE_SHIELD,35,false));
+        this.goalSelector.addGoal(1, new ChargeAttackAnimationGoal2<>(this,SWING_UPPERCUT,34,50,27,0.3f,0.3f));
         this.goalSelector.addGoal(1, new Shield_Smash(this,SHIELD_SMASH_ATTACK));
         this.goalSelector.addGoal(1, new ChargeAttackAnimationGoal1<>(this, BODY_CHECK_ATTACK1,25,20,0.25f,0.25f));
         this.goalSelector.addGoal(1, new ChargeAttackAnimationGoal1<>(this, BODY_CHECK_ATTACK2,25,20,0.25f,0.25f));
@@ -197,7 +199,6 @@ public class Ignis_Entity extends Boss_monster {
         this.goalSelector.addGoal(1, new AttackAnimationGoal1<>(this, STRIKE, 34,true));
         this.goalSelector.addGoal(1, new Triple_Attack(this, TRIPLE_ATTACK));
         this.goalSelector.addGoal(1, new Four_Combo(this, FOUR_COMBO));
-        this.goalSelector.addGoal(1, new Break_the_Shield(this, BREAK_THE_SHIELD));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, true));
 
@@ -390,7 +391,7 @@ public class Ignis_Entity extends Boss_monster {
                 .createMutableAttribute(Attributes.FOLLOW_RANGE, 50.0D)
                 .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.33F)
                 .createMutableAttribute(Attributes.ATTACK_DAMAGE, 14)
-                .createMutableAttribute(Attributes.MAX_HEALTH, 333)
+                .createMutableAttribute(Attributes.MAX_HEALTH, 450)
                 .createMutableAttribute(Attributes.ARMOR, 10)
                 .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1.0);
     }
@@ -445,10 +446,17 @@ public class Ignis_Entity extends Boss_monster {
             if (this.rand.nextInt(24) == 0 && !this.isSilent()) {
                 this.world.playSound(this.getPosX() + 0.5D, this.getPosY() + 0.5D, this.getPosZ() + 0.5D, SoundEvents.ENTITY_BLAZE_BURN, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
             }
-
-            for(int i = 0; i < 2; ++i) {
+            if(this.getBossPhase() > 1){
+                int i = this.getCrackiness() == Crackiness.NONE ? 5 : this.getCrackiness() == Crackiness.LOW ? 4 : this.getCrackiness() == Crackiness.MEDIUM ? 3 : 2;
+                if (rand.nextInt(i) == 0) {
+                    this.world.addParticle(ModParticle.SOUL_LAVA.get(), this.getPosXRandom(0.5D), this.getPosYRandom(), this.getPosZRandom(0.5D), 0.0D, 0.0D, 0.0D);
+                }
+            }else{
+            for (int i = 0; i < 2; ++i) {
                 this.world.addParticle(ParticleTypes.LARGE_SMOKE, this.getPosXRandom(0.5D), this.getPosYRandom(), this.getPosZRandom(0.5D), 0.0D, 0.0D, 0.0D);
             }
+        }
+
         }else{
             timeWithoutTarget++;
             if (target != null) {
@@ -543,9 +551,11 @@ public class Ignis_Entity extends Boss_monster {
 
         }
         if (body_check_cooldown > 0) body_check_cooldown--;
+        if (air_smash_cooldown > 0) air_smash_cooldown--;
+        if (counter_strike_cooldown > 0) counter_strike_cooldown--;
+        if (poke_cooldown > 0) poke_cooldown--;
 
-
-        repelEntities(1.7F, 4, 1.7F, 1.7F);
+        repelEntities(1.4F, 4, 1.4F, 1.4F);
 
         rotationYaw = renderYawOffset;
 
@@ -602,25 +612,25 @@ public class Ignis_Entity extends Boss_monster {
         if (this.getAnimation() == SWING_ATTACK) {
             if (this.getAnimationTick() == 34) {
                 this.playSound(ModSounds.STRONGSWING.get(), 1.0f, 1F + this.getRNG().nextFloat() * 0.1F);
-                AreaAttack(6.5f,6,60,1.0f,0.05f,80,3 ,150,0);
+                AreaAttack(6.5f,6,70,1.1f,0.05f,80,2,150,0);
             }
         }
         if (this.getAnimation() == HORIZONTAL_SWING_ATTACK) {
             if (this.getAnimationTick() == 31) {
                 this.playSound(ModSounds.STRONGSWING.get(), 1.0f, 1F + this.getRNG().nextFloat() * 0.1F);
-                AreaAttack(5.25f,6,210,1.1f,0.08f,100,5 ,150,0);
+                AreaAttack(5.25f,6,210,1.0f,0.08f,100,5 ,150,0);
             }
         }
         if (this.getAnimation() == SWING_ATTACK_SOUL) {
             if (this.getAnimationTick() == 28) {
                 this.playSound(ModSounds.STRONGSWING.get(), 1.0f, 1F + this.getRNG().nextFloat() * 0.1F);
-                AreaAttack(6.5f,6,70,1.0f,0.05f,80,2,150,0);
+                AreaAttack(6.5f,6,70,1.1f,0.05f,80,2,150,0);
             }
         }
         if (this.getAnimation() == HORIZONTAL_SWING_ATTACK_SOUL) {
             if (this.getAnimationTick() == 27) {
                 this.playSound(ModSounds.STRONGSWING.get(), 1.0f, 1F + this.getRNG().nextFloat() * 0.1F);
-                AreaAttack(5.25f,6,210,1.1f,0.08f,100,5 ,150,0);
+                AreaAttack(5.25f,6,210,1.0f,0.08f,100,5 ,150,0);
             }
         }
         if (this.getAnimation() == BREAK_THE_SHIELD) {
@@ -1096,10 +1106,10 @@ public class Ignis_Entity extends Boss_monster {
             double maxY = this.getPosY() + mxy;
             for (int i = 0; i < arcLen; i++) {
                 double theta = (i / (arcLen - 1.0) - 0.5) * spread + facingAngle;
-                double vecX = Math.cos(theta);
-                double vecZ = Math.sin(theta);
-                double px = this.getPosX() + vecX * distance + vec * Math.cos((renderYawOffset + 90) * Math.PI / 180);
-                double pz = this.getPosZ() + vecZ * distance + vec * Math.sin((renderYawOffset + 90) * Math.PI / 180);
+                double vx = Math.cos(theta);
+                double vz = Math.sin(theta);
+                double px = this.getPosX() + vx * distance + vec * Math.cos((renderYawOffset + 90) * Math.PI / 180);
+                double pz = this.getPosZ() + vz * distance + vec * Math.sin((renderYawOffset + 90) * Math.PI / 180);
                 float factor = 1 - distance / (float) 12;
                 if (ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
                     int hitX = MathHelper.floor(px);
@@ -1118,21 +1128,21 @@ public class Ignis_Entity extends Boss_monster {
                 List<LivingEntity> hit = world.getEntitiesWithinAABB(LivingEntity.class, selection);
                 for (LivingEntity entity : hit) {
                     if (!isOnSameTeam(entity) && !(entity instanceof Ignis_Entity) && entity != this) {
-                        boolean flag = entity.attackEntityFrom(DamageSource.causeMobDamage(this), (float) (this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
-                        if (flag) {
-                            double airborne = 0.1 * distance + world.rand.nextDouble() * 0.15;
-                            entity.setMotion(entity.getMotion().add(0.0D, airborne, 0.0D));
+                        if (entity instanceof PlayerEntity) {
+                            if (entity.isActiveItemStackBlocking() && shieldbreakticks > 0) {
+                                disableShield(entity, shieldbreakticks);
+                            }
                         }
-
+                        boolean flag = entity.attackEntityFrom(DamageSource.causeMobDamage(this), (float) (this.getAttributeValue(Attributes.ATTACK_DAMAGE) * damage + entity.getMaxHealth() * hpdamage));
                         if (flag) {
                             if (grab) {
                                 double magnitude = -4;
-                                double x = vecX * (1 - factor) * magnitude;
+                                double x = vx * (1 - factor) * magnitude;
                                 double y = 0;
                                 if (entity.isOnGround()) {
                                     y += 0.15;
                                 }
-                                double z = vecZ * (1 - factor) * magnitude;
+                                double z = vz * (1 - factor) * magnitude;
                                 entity.setMotion(entity.getMotion().add(x, y, z));
                             }else{
                                 double airborne = 0.1 * distance + world.rand.nextDouble() * 0.15;
