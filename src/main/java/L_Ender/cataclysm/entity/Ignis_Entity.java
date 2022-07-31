@@ -118,6 +118,7 @@ public class Ignis_Entity extends Boss_monster {
     public Ignis_Entity(EntityType entity, World world) {
         super(entity, world);
         this.stepHeight = 2.5F;
+        this.experienceValue = 500;
         this.setPathPriority(PathNodeType.WATER, -1.0F);
         this.setPathPriority(PathNodeType.UNPASSABLE_RAIL, 0.0F);
         this.setPathPriority(PathNodeType.LAVA, 8.0F);
