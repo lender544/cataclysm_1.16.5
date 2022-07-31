@@ -22,4 +22,17 @@ public class CMRenderTypes extends RenderType {
                 .overlay(OVERLAY_ENABLED)
                 .build(false));
     }
+
+    public static RenderType getFlickering(ResourceLocation p_228652_0_, float lightLevel) {
+        RenderState.TextureState renderstate$texturestate = new RenderState.TextureState(p_228652_0_, false, false);
+        return makeType("flickering", DefaultVertexFormats.ENTITY, 7, 256, false, true, RenderType.State.getBuilder()
+                .texture(renderstate$texturestate)
+                .transparency(TRANSLUCENT_TRANSPARENCY)
+                .alpha(DEFAULT_ALPHA)
+                .cull(CULL_DISABLED)
+                .lightmap(LIGHTMAP_ENABLED)
+                .overlay(OVERLAY_ENABLED)
+                .build(false));
+    }
+
 }

@@ -58,6 +58,7 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENDER_GUARDIAN_BULLET.get(), RendererEnder_Guardian_bullet::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.VOID_RUNE.get(), RendererVoid_Rune::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENDERMAPTERA.get(), RendererEndermaptera::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.IGNITED_REVENANT.get(), RendererIgnited_Revenant::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.VOID_SCATTER_ARROW.get(), RendererVoid_Scatter_Arrow::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.VOID_SHARD.get(), manager -> new SpriteRenderer(manager, itemRendererIn));
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.SCREEN_SHAKE.get(), RendererNull::new);

@@ -4,13 +4,12 @@ package L_Ender.cataclysm.client.render.entity;
 import L_Ender.cataclysm.client.model.entity.ModelIgnis;
 import L_Ender.cataclysm.client.render.RenderUtils;
 import L_Ender.cataclysm.client.render.layer.Ignis_Armor_Crack_Layer;
-import L_Ender.cataclysm.client.render.layer.Ignis_Shield_Crack_Layer;
+import L_Ender.cataclysm.client.render.layer.Ignis_Shield_Layer;
 import L_Ender.cataclysm.entity.Ignis_Entity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.entity.monster.BlazeEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
@@ -26,8 +25,8 @@ public class RendererIgnis extends MobRenderer<Ignis_Entity, ModelIgnis> {
 
     public RendererIgnis(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new ModelIgnis(), 1.0F);
-        this.addLayer(new Ignis_Shield_Crack_Layer(this));
         this.addLayer(new Ignis_Armor_Crack_Layer(this));
+        this.addLayer(new Ignis_Shield_Layer(this));
 
     }
     @Override
@@ -50,9 +49,7 @@ public class RendererIgnis extends MobRenderer<Ignis_Entity, ModelIgnis> {
             Vector3d bladePos = RenderUtils.getWorldPosFromModel(entity, entityYaw, entityModel.blade2);
             entity.setSocketPosArray(0, bladePos);
         }
-
     }
-
 
     protected int getBlockLight(Ignis_Entity entityIn, BlockPos pos) {
         return 15;

@@ -55,6 +55,11 @@ public class ModEntities {
             .immuneToFire()
             .build(cataclysm.MODID + ":ignis"));
 
+    public static final RegistryObject<EntityType<Ignited_Revenant_Entity>> IGNITED_REVENANT = ENTITY_TYPE.register("ignited_revenant", () -> EntityType.Builder.create(Ignited_Revenant_Entity::new, EntityClassification.MONSTER)
+            .size(0.8F, 2f)
+            .immuneToFire()
+            .build(cataclysm.MODID + ":ignited_revenant"));
+
     public static final RegistryObject<EntityType<Ender_Guardian_Bullet_Entity>> ENDER_GUARDIAN_BULLET = ENTITY_TYPE.register("ender_guardian_bullet", () -> EntityType.Builder.<Ender_Guardian_Bullet_Entity>create(Ender_Guardian_Bullet_Entity::new, EntityClassification.MISC)
             .size(0.3125f, 0.3125f).setUpdateInterval(1).setTrackingRange(64).setShouldReceiveVelocityUpdates(true)
             .build(cataclysm.MODID + ":ender_guardian_bullet"));
@@ -104,6 +109,7 @@ public class ModEntities {
         event.put(IGNIS.get(), Ignis_Entity.bakeAttributes().create());
         event.put(ENDER_GUARDIAN.get(), Ender_Guardian_Entity.bakeAttributes().create());
         event.put(ENDERMAPTERA.get(), Endermaptera_Entity.bakeAttributes().create());
+        event.put(IGNITED_REVENANT.get(), Ignited_Revenant_Entity.ignited_revenant().create());
 
     }
 

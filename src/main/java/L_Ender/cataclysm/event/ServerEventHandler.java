@@ -198,17 +198,6 @@ public class ServerEventHandler {
         }
     }
 
-    @SubscribeEvent
-    public static void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
-        if (event.getEntityLiving().world.isRemote && (event.getEntityLiving().isPotionActive(ModEffect.EFFECTSTUN.get()))) {
-            for (int i = 0; i < 5; i++) {
-                float innerAngle = (0.01745329251F * (event.getEntityLiving().renderYawOffset + event.getEntityLiving().ticksExisted * 5) * (i + 1));
-                double extraX = 0.5F * MathHelper.sin((float) (Math.PI + innerAngle));
-                double extraZ = 0.5F * MathHelper.cos(innerAngle);
-                event.getEntityLiving().world.addParticle(ParticleTypes.CRIT, true, event.getEntityLiving().getPosX() + extraX, event.getEntityLiving().getPosYEye() + 0.5F, event.getEntityLiving().getPosZ() + extraZ, 0, 0, 0);
-            }
-        }
-    }
 }
 
 

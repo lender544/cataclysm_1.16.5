@@ -34,7 +34,6 @@ apply plugin: "org.spongepowered.mixin"
 version = '0.20'
 group = 'com.yourname.modid' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'Cataclysm'
-
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
@@ -127,7 +126,7 @@ jar {
         attributes([
                 "Specification-Title": "cataclysm",
                 "Specification-Vendor": "L_Ender",
-                "Specification-Version": "0.18", // We are version 1 of ourselves
+                "Specification-Version": "0.20", // We are version 1 of ourselves
                 "Implementation-Title": project.name,
                 "Implementation-Version": "${version}",
                 "Implementation-Vendor" :"L_Ender",
