@@ -52,45 +52,6 @@ public class The_Incinerator extends Item {
 
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-        if (hand == Hand.MAIN_HAND) {
-            player.setActiveHand(hand);
-            return ActionResult.resultConsume(player.getHeldItem(hand));
-        } else {
-            return ActionResult.resultFail(player.getHeldItem(hand));
-        }
-    }
-
-    @Override
-    public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
-        double radius = 11.0D;
-        World world = player.world;
-        List<LivingEntity> list = world.getEntitiesWithinAABB(LivingEntity.class, player.getBoundingBox().grow(radius));
-        for (LivingEntity entity : list) {
-            if (entity instanceof PlayerEntity && ((PlayerEntity) entity).abilities.disableDamage) continue;
-            Vector3d diff = entity.getPositionVec().subtract(player.getPositionVec().add(0,0,0));
-            diff = diff.normalize().scale(0.1);
-            entity.setMotion(entity.getMotion().subtract(diff));
-
-        }
-
-        if (world.isRemote) {
-            for (int i = 0; i < 3; ++i) {
-                int j = world.rand.nextInt(2) * 2 - 1;
-                int k = world.rand.nextInt(2) * 2 - 1;
-                double d0 = player.getPosX() + 0.25D * (double) j;
-                double d1 = (float) player.getPosY() + world.rand.nextFloat();
-                double d2 = player.getPosZ() + 0.25D * (double) k;
-                double d3 = world.rand.nextFloat() * (float) j;
-                double d4 = ((double) world.rand.nextFloat() - 0.5D) * 0.125D;
-                double d5 = world.rand.nextFloat() * (float) k;
-                world.addParticle(ParticleTypes.PORTAL, d0, d1, d2, d3, d4, d5);
-            }
-        }
-    }
-
-
-    @Override
     public boolean canDisableShield(ItemStack stack, ItemStack shield, LivingEntity entity, LivingEntity attacker) {
         return true;
     }
@@ -117,9 +78,5 @@ public class The_Incinerator extends Item {
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot) {
         return equipmentSlot == EquipmentSlotType.MAINHAND ? this.guantletAttributes : super.getAttributeModifiers(equipmentSlot);
     }
-
-    @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TranslationTextComponent("item.cataclysm.gauntlet_of_guard.desc").mergeStyle(TextFormatting.DARK_GREEN));
-    }
+    
 }
