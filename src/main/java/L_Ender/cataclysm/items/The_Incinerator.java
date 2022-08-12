@@ -78,5 +78,5 @@ public class The_Incinerator extends Item {
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot) {
         return equipmentSlot == EquipmentSlotType.MAINHAND ? this.guantletAttributes : super.getAttributeModifiers(equipmentSlot);
     }
-    
+
 }
