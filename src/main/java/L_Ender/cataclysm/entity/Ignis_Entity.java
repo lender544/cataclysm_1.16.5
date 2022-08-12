@@ -564,6 +564,8 @@ public class Ignis_Entity extends Boss_monster {
         if (counter_strike_cooldown > 0) counter_strike_cooldown--;
         if (poke_cooldown > 0) poke_cooldown--;
         if (earth_shudders_cooldown > 0) earth_shudders_cooldown--;
+        if (horizontal_small_swing_cooldown > 0) horizontal_small_swing_cooldown--;
+
         repelEntities(1.4F, 4, 1.4F, 1.4F);
 
         rotationYaw = renderYawOffset;
