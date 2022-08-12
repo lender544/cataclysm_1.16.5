@@ -100,7 +100,7 @@ public class Ignis_Entity extends Boss_monster {
     public static final int POKE_COOLDOWN = 200;
     public static final int CONTER_STRIKE_COOLDOWN = 360;
     public static final int EARTH_SHUDDERS_COOLDOWN = 400;
-    public static final int HORIZONTAL_SMALL_SWING_COOLDOWN = 150;
+    public static final int HORIZONTAL_SMALL_SWING_COOLDOWN = 100;
     private static final DataParameter<Boolean> IS_BLOCKING = EntityDataManager.createKey(Ignis_Entity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> IS_SHIELD_BREAK = EntityDataManager.createKey(Ignis_Entity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> IS_SHIELD = EntityDataManager.createKey(Ignis_Entity.class, DataSerializers.BOOLEAN);
@@ -605,7 +605,7 @@ public class Ignis_Entity extends Boss_monster {
                 } else if ((blockingProgress == 10 || swordProgress == 10) && !isAIDisabled() &&this.getAnimation() == NO_ANIMATION && this.getDistance(target) < 5F && this.getRNG().nextFloat() * 100.0F < 0.7f && counter_strike_cooldown <= 0) {
                     counter_strike_cooldown = CONTER_STRIKE_COOLDOWN;
                     this.setAnimation(COUNTER);
-                } else if ((blockingProgress == 10 || swordProgress == 10) && !isAIDisabled() &&this.getAnimation() == NO_ANIMATION && this.getDistance(target) > 4.5F && this.getDistance(target) < 11F && this.getRNG().nextFloat() * 100.0F < 0.9f && earth_shudders_cooldown <= 0 && target.isOnGround()) {
+                } else if ((blockingProgress == 10 || swordProgress == 10) && !isAIDisabled() &&this.getAnimation() == NO_ANIMATION && this.getDistance(target) > 4.5F && this.getDistance(target) < 11F && earth_shudders_cooldown <= 0 && this.getRNG().nextFloat() * 100.0F < 0.9f && (this.getPosY() >= target.getPosY() - 2.5D && this.getPosY() <= target.getPosY() + 2.5D)) {
                     earth_shudders_cooldown = EARTH_SHUDDERS_COOLDOWN;
                     this.setAnimation(EARTH_SHUDDERS_ATTACK);
                 } else if ((blockingProgress == 10 || swordProgress == 10) && !isAIDisabled() && this.getAnimation() == NO_ANIMATION && this.getDistance(target) < 5.5F && this.getRNG().nextFloat() * 100.0F < 12f && horizontal_small_swing_cooldown <= 0) {
