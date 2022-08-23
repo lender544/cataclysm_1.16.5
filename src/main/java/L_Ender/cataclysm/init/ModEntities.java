@@ -32,11 +32,15 @@ public class ModEntities {
     public static final RegistryObject<EntityType<Ender_Guardian_Entity>> ENDER_GUARDIAN = ENTITY_TYPE.register("ender_guardian", () -> EntityType.Builder.create(Ender_Guardian_Entity::new, EntityClassification.MONSTER)
             .size(2.5F, 3.8F)
             .immuneToFire()
+            .trackingRange(16)
+            .setShouldReceiveVelocityUpdates(true)
             .build(cataclysm.MODID + ":ender_guardian"));
 
     public static final RegistryObject<EntityType<Netherite_Monstrosity_Entity>> NETHERITE_MONSTROSITY = ENTITY_TYPE.register("netherite_monstrosity", () -> EntityType.Builder.create(Netherite_Monstrosity_Entity::new, EntityClassification.MONSTER)
             .size(3.0f, 5.75f)
             .immuneToFire()
+            .trackingRange(16)
+            .setShouldReceiveVelocityUpdates(true)
             .build(cataclysm.MODID + ":netherite_monstrosity"));
 
     public static final RegistryObject<EntityType<Lava_Bomb_Entity>> LAVA_BOMB = ENTITY_TYPE.register("lava_bomb", () -> EntityType.Builder.<Lava_Bomb_Entity>create(Lava_Bomb_Entity::new, EntityClassification.MISC)
@@ -53,6 +57,8 @@ public class ModEntities {
     public static final RegistryObject<EntityType<Ignis_Entity>> IGNIS = ENTITY_TYPE.register("ignis", () -> EntityType.Builder.create(Ignis_Entity::new, EntityClassification.MONSTER)
             .size(2.5F, 3.5F)
             .immuneToFire()
+            .trackingRange(16)
+            .setShouldReceiveVelocityUpdates(true)
             .build(cataclysm.MODID + ":ignis"));
 
     public static final RegistryObject<EntityType<Ignited_Revenant_Entity>> IGNITED_REVENANT = ENTITY_TYPE.register("ignited_revenant", () -> EntityType.Builder.create(Ignited_Revenant_Entity::new, EntityClassification.MONSTER)
@@ -96,8 +102,16 @@ public class ModEntities {
 
     public static final RegistryObject<EntityType<Ignis_Fireball_Entity>> IGNIS_FIREBALL = ENTITY_TYPE.register("ignis_fireball", () ->  EntityType.Builder.<Ignis_Fireball_Entity>create(Ignis_Fireball_Entity::new, EntityClassification.MISC)
             .size(0.3125F, 0.3125F)
-            .trackingRange(4)
-            .updateInterval(10)
+            .setUpdateInterval(1)
+            .setTrackingRange(20)
+            .setShouldReceiveVelocityUpdates(true)
+            .build(cataclysm.MODID + ":ignis_fireball"));
+
+    public static final RegistryObject<EntityType<Ignis_Abyss_Fireball_Entity>> IGNIS_ABYSS_FIREBALL = ENTITY_TYPE.register("ignis_abyss_fireball", () ->  EntityType.Builder.<Ignis_Abyss_Fireball_Entity>create(Ignis_Abyss_Fireball_Entity::new, EntityClassification.MISC)
+            .size(0.3125F, 0.3125F)
+            .setUpdateInterval(1)
+            .setTrackingRange(20)
+            .setShouldReceiveVelocityUpdates(true)
             .build(cataclysm.MODID + ":ignis_fireball"));
 
 

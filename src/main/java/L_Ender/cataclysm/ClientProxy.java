@@ -65,6 +65,7 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.VOID_SHARD.get(), manager -> new SpriteRenderer(manager, itemRendererIn));
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.SCREEN_SHAKE.get(), RendererNull::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.IGNIS_FIREBALL.get(), RendererIgnis_Fireball::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.IGNIS_ABYSS_FIREBALL.get(), RendererIgnis_Abyss_Fireball::new);
         MinecraftForge.EVENT_BUS.register(new ClientEvent());
         try {
             ItemModelsProperties.registerProperty(ModItems.BULWARK_OF_THE_FLAME.get(), new ResourceLocation("blocking"), (stack, p_239421_1_, p_239421_2_) -> p_239421_2_ != null && p_239421_2_.isHandActive() && p_239421_2_.getActiveItemStack() == stack ? 1.0F : 0.0F);
