@@ -2,6 +2,7 @@ package L_Ender.cataclysm.entity;
 
 import L_Ender.cataclysm.cataclysm;
 import L_Ender.cataclysm.config.CMConfig;
+import L_Ender.cataclysm.entity.AI.AttackMoveGoal;
 import L_Ender.cataclysm.entity.AI.CmAttackGoal;
 import L_Ender.cataclysm.entity.effect.ScreenShake_Entity;
 import L_Ender.cataclysm.entity.etc.CMPathNavigateGround;
@@ -108,7 +109,7 @@ public class Netherite_Monstrosity_Entity extends Boss_monster {
         this.goalSelector.addGoal(1, new HealGoal());
         this.goalSelector.addGoal(1, new ShootGoal());
         this.goalSelector.addGoal(1, new EarthQuakeGoal());
-        this.goalSelector.addGoal(2, new CmAttackGoal(this,1.0));
+        this.goalSelector.addGoal(2, new AttackMoveGoal(this, true,1.0D));
         this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));

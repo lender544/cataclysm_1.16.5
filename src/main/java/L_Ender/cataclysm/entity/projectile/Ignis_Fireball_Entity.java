@@ -47,7 +47,6 @@ public class Ignis_Fireball_Entity extends DamagingProjectileEntity {
     public Ignis_Fireball_Entity(World worldIn, LivingEntity entity) {
         this(ModEntities.IGNIS_FIREBALL.get(), worldIn);
         this.setShooter(entity);
-        this.setPosition(entity.getPosX() - (double) (entity.getWidth() + 1.0F) * 0.15D * (double) MathHelper.sin(entity.renderYawOffset * ((float) Math.PI / 180F)), entity.getPosY() + (double) 1F, entity.getPosZ() + (double) (entity.getWidth() + 1.0F) * 0.15D * (double) MathHelper.cos(entity.renderYawOffset * ((float) Math.PI / 180F)));
     }
 
     public void tick() {
