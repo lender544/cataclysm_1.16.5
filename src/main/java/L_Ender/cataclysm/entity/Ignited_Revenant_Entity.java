@@ -7,8 +7,10 @@ import L_Ender.cataclysm.entity.etc.CMPathNavigateGround;
 import L_Ender.cataclysm.entity.etc.SmartBodyHelper2;
 import L_Ender.cataclysm.entity.projectile.Ash_Breath_Entity;
 import L_Ender.cataclysm.init.ModEntities;
+import L_Ender.cataclysm.init.ModSounds;
 import com.github.alexthe666.citadel.animation.Animation;
 import com.github.alexthe666.citadel.animation.AnimationHandler;
+import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -25,6 +27,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
@@ -69,7 +72,7 @@ public class Ignited_Revenant_Entity extends Boss_monster {
                 .createMutableAttribute(Attributes.FOLLOW_RANGE, 20.0D)
                 .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.28F)
                 .createMutableAttribute(Attributes.ATTACK_DAMAGE, 10)
-                .createMutableAttribute(Attributes.MAX_HEALTH, 150)
+                .createMutableAttribute(Attributes.MAX_HEALTH, 80)
                 .createMutableAttribute(Attributes.ARMOR, 12)
                 .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1.0);
     }
@@ -81,6 +84,10 @@ public class Ignited_Revenant_Entity extends Boss_monster {
 
     public boolean onLivingFall(float distance, float damageMultiplier) {
         return false;
+    }
+
+    public CreatureAttribute getCreatureAttribute() {
+        return CreatureAttribute.UNDEAD;
     }
 
     @Override
@@ -125,8 +132,29 @@ public class Ignited_Revenant_Entity extends Boss_monster {
             angerProgress--;
         }
 
+        if(this.getAnimation() == ASH_BREATH_ATTACK){
+            if (this.getAnimationTick() == 21) {
+                this.playSound(ModSounds.REVENANT_BREATH.get(), 1.0f, 1.0f);
+
+            }
+        }
+
     }
 
+    protected SoundEvent getAmbientSound() {
+        this.playSound(ModSounds.REVENANT_IDLE.get(), 1.0f, 0.75f);
+        return null;
+    }
+
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+        this.playSound(ModSounds.REVENANT_HURT.get(), 1.0f, 0.75f);
+        return null;
+    }
+
+    protected SoundEvent getDeathSound() {
+        this.playSound(ModSounds.REVENANT_DEATH.get(), 1.0f, 0.75f);
+        return null;
+    }
 
     @Override
     protected void onDeathAIUpdate() {
