@@ -6,6 +6,7 @@ import L_Ender.cataclysm.config.ConfigHolder;
 import L_Ender.cataclysm.event.ServerEventHandler;
 import L_Ender.cataclysm.init.*;
 //import L_Ender.cataclysm.init.ModStructures;
+import L_Ender.cataclysm.message.MessageCMMultipart;
 import L_Ender.cataclysm.util.Cataclysm_Group;
 import L_Ender.cataclysm.util.Modcompat;
 import net.minecraft.item.ItemGroup;
@@ -38,6 +39,7 @@ public class cataclysm {
     private static final String PROTOCOL_VERSION = Integer.toString(1);
     public static final ItemGroup CATACLYSM_GROUP = new Cataclysm_Group("cataclysmtab");
     public static CommonProxy PROXY = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
+    private static int packetsRegistered;
 
 
     static {
@@ -65,6 +67,7 @@ public class cataclysm {
         ModEntities.ENTITY_TYPE.register(bus);
         ModStructures.STRUCTURE_FEATURES.register(bus);
         ModSounds.SOUNDS.register(bus);
+        //ASMHook.registerMultipartEvents(MinecraftForge.EVENT_BUS);
         PROXY.init();
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new ServerEventHandler());
@@ -96,6 +99,7 @@ public class cataclysm {
             ModConfiguredStructures.registerConfiguredStructures();
             Modcompat.registerDispenserBehaviors();
         });
+        NETWORK_WRAPPER.registerMessage(packetsRegistered++, MessageCMMultipart.class, MessageCMMultipart::encode, MessageCMMultipart::new, MessageCMMultipart.Handler::onMessage);
     }
 
     public void onBiomeLoading(BiomeLoadingEvent event) {

@@ -2,8 +2,7 @@ package L_Ender.cataclysm.entity;
 
 import L_Ender.cataclysm.cataclysm;
 import L_Ender.cataclysm.config.CMConfig;
-import L_Ender.cataclysm.entity.AI.AttackMoveGoal;
-import L_Ender.cataclysm.entity.AI.CmAttackGoal;
+import L_Ender.cataclysm.entity.AI.*;
 import L_Ender.cataclysm.entity.effect.ScreenShake_Entity;
 import L_Ender.cataclysm.entity.etc.CMPathNavigateGround;
 import L_Ender.cataclysm.entity.etc.GroundPathNavigatorWide;
@@ -120,13 +119,13 @@ public class Ender_Guardian_Entity extends Boss_monster {
     }
 
     protected void registerGoals() {
-        this.goalSelector.addGoal(2, new AttackMoveGoal(this, true,1.0D));
-        this.goalSelector.addGoal(1, new PunchAttackGoal());
-        this.goalSelector.addGoal(1, new BurstAttackGoal());
-        this.goalSelector.addGoal(1, new StompAttackGoal());
-        this.goalSelector.addGoal(1, new UppercutAndBulletGoal());
-        this.goalSelector.addGoal(1, new RageUppercut());
-        this.goalSelector.addGoal(1, new MassDestruction());
+        this.goalSelector.addGoal(2, new AttackMoveGoal(this,true,1.0));
+        this.goalSelector.addGoal(1, new PunchAttackGoal(this));
+        this.goalSelector.addGoal(1, new AttackAnimationGoal2<>(this, GUARDIAN_MASS_DESTRUCTION, 39, 50));
+        this.goalSelector.addGoal(1, new AttackAnimationGoal2<>(this, GUARDIAN_BURST_ATTACK, 27, 47));
+        this.goalSelector.addGoal(1, new StompAttackGoal(this));
+        this.goalSelector.addGoal(1, new UppercutAndBulletGoal(this,GUARDIAN_UPPERCUT_AND_BULLET));
+        this.goalSelector.addGoal(1, new RageUppercut(this,GUARDIAN_RAGE_UPPERCUT));
         this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
@@ -850,22 +849,19 @@ public class Ender_Guardian_Entity extends Boss_monster {
         this.bossInfo.removePlayer(player);
     }
 
-    class PunchAttackGoal extends Goal {
+    class PunchAttackGoal extends AnimationGoal<Ender_Guardian_Entity> {
 
-        public PunchAttackGoal() {
-            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
-        }
-
-        public boolean shouldExecute() {
-            return Ender_Guardian_Entity.this.getAnimation() == GUARDIAN_LEFT_ATTACK
-                    || Ender_Guardian_Entity.this.getAnimation() == GUARDIAN_RIGHT_ATTACK
-                    || Ender_Guardian_Entity.this.getAnimation() == GUARDIAN_LEFT_STRONG_ATTACK
-                    || Ender_Guardian_Entity.this.getAnimation() == GUARDIAN_RIGHT_STRONG_ATTACK;
+        public PunchAttackGoal(Ender_Guardian_Entity entity) {
+            super(entity);
+            //this.setFlags(EnumSet.of(Flag.JUMP, Flag.LOOK));
         }
 
         @Override
-        public void resetTask() {
-            super.resetTask();
+        protected boolean test(Animation animation) {
+            return animation == GUARDIAN_LEFT_ATTACK
+                    || animation == GUARDIAN_RIGHT_ATTACK
+                    || animation == GUARDIAN_LEFT_STRONG_ATTACK
+                    || animation == GUARDIAN_RIGHT_STRONG_ATTACK;
         }
 
         public void tick() {
@@ -906,21 +902,17 @@ public class Ender_Guardian_Entity extends Boss_monster {
         }
     }
 
-    class StompAttackGoal extends Goal {
+    class StompAttackGoal extends AnimationGoal<Ender_Guardian_Entity> {
 
-
-        public StompAttackGoal() {
-            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
-        }
-
-        public boolean shouldExecute() {
-            return Ender_Guardian_Entity.this.getAnimation() == GUARDIAN_STOMP
-                    || Ender_Guardian_Entity.this.getAnimation() == GUARDIAN_RAGE_STOMP;
+        public StompAttackGoal(Ender_Guardian_Entity entity) {
+            super(entity);
+            //this.setFlags(EnumSet.of(Flag.JUMP, Flag.LOOK));
         }
 
         @Override
-        public void resetTask() {
-            super.resetTask();
+        protected boolean test(Animation animation) {
+            return animation == GUARDIAN_STOMP
+                    || animation == GUARDIAN_RAGE_STOMP;
         }
 
         public void tick() {
@@ -947,49 +939,11 @@ public class Ender_Guardian_Entity extends Boss_monster {
         }
     }
 
-    class BurstAttackGoal extends Goal {
 
+    class UppercutAndBulletGoal extends SimpleAnimationGoal<Ender_Guardian_Entity> {
 
-        public BurstAttackGoal() {
-            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
-        }
-
-        public boolean shouldExecute() {
-            return Ender_Guardian_Entity.this.getAnimation() == GUARDIAN_BURST_ATTACK;
-        }
-
-        @Override
-        public void resetTask() {
-            super.resetTask();
-        }
-
-        public void tick() {
-            Ender_Guardian_Entity.this.setMotion(0, Ender_Guardian_Entity.this.getMotion().y, 0);
-            LivingEntity target = Ender_Guardian_Entity.this.getAttackTarget();
-            if(Ender_Guardian_Entity.this.getAnimation() == GUARDIAN_BURST_ATTACK) {
-                if (Ender_Guardian_Entity.this.getAnimationTick() < 27 && target != null || Ender_Guardian_Entity.this.getAnimationTick() > 47 && target != null) {
-                    Ender_Guardian_Entity.this.getLookController().setLookPositionWithEntity(target, 30.0F, 30.0F);
-                } else {
-                    Ender_Guardian_Entity.this.rotationYaw = Ender_Guardian_Entity.this.prevRotationYaw;
-                   // Ender_Guardian_Entity.this.renderYawOffset = Ender_Guardian_Entity.this.prevRenderYawOffset;
-                }
-            }
-        }
-    }
-
-    class UppercutAndBulletGoal extends Goal {
-
-        public UppercutAndBulletGoal() {
-            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
-        }
-
-        public boolean shouldExecute() {
-            return Ender_Guardian_Entity.this.getAnimation() == GUARDIAN_UPPERCUT_AND_BULLET;
-        }
-
-        @Override
-        public void resetTask() {
-            super.resetTask();
+        public UppercutAndBulletGoal(Ender_Guardian_Entity entity, Animation animation) {
+            super(entity, animation);
         }
 
         public void tick() {
@@ -1015,20 +969,10 @@ public class Ender_Guardian_Entity extends Boss_monster {
         }
     }
 
-    class RageUppercut extends Goal {
+    class RageUppercut extends SimpleAnimationGoal<Ender_Guardian_Entity> {
 
-
-        public RageUppercut() {
-            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
-        }
-
-        public boolean shouldExecute() {
-            return Ender_Guardian_Entity.this.getAnimation() == GUARDIAN_RAGE_UPPERCUT;
-        }
-
-        @Override
-        public void resetTask() {
-            super.resetTask();
+        public RageUppercut(Ender_Guardian_Entity entity, Animation animation) {
+            super(entity, animation);
         }
 
         public void tick() {
@@ -1052,35 +996,6 @@ public class Ender_Guardian_Entity extends Boss_monster {
 
             Bulletpattern();
 
-        }
-    }
-
-
-    class MassDestruction extends Goal {
-
-
-        public MassDestruction() {
-            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
-        }
-
-        public boolean shouldExecute() {
-            return Ender_Guardian_Entity.this.getAnimation() == GUARDIAN_MASS_DESTRUCTION;
-        }
-
-        @Override
-        public void resetTask() {
-            super.resetTask();
-        }
-
-        public void tick() {
-            Ender_Guardian_Entity.this.setMotion(0, Ender_Guardian_Entity.this.getMotion().y, 0);
-            LivingEntity target = Ender_Guardian_Entity.this.getAttackTarget();
-            if (Ender_Guardian_Entity.this.getAnimationTick() < 39 && target!= null || Ender_Guardian_Entity.this.getAnimationTick() > 50 && target!= null) {
-                Ender_Guardian_Entity.this.getLookController().setLookPositionWithEntity(target, 30.0F, 30.0F);
-            }else{
-                Ender_Guardian_Entity.this.rotationYaw = Ender_Guardian_Entity.this.prevRotationYaw;
-              //  Ender_Guardian_Entity.this.renderYawOffset = Ender_Guardian_Entity.this.prevRenderYawOffset;
-            }
         }
     }
 

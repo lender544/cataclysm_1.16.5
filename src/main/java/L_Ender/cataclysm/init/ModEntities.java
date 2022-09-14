@@ -62,7 +62,7 @@ public class ModEntities {
             .build(cataclysm.MODID + ":ignis"));
 
     public static final RegistryObject<EntityType<Ignited_Revenant_Entity>> IGNITED_REVENANT = ENTITY_TYPE.register("ignited_revenant", () -> EntityType.Builder.create(Ignited_Revenant_Entity::new, EntityClassification.MONSTER)
-            .size(0.8F, 2f)
+            .size(1.6F, 2.8f)
             .immuneToFire()
             .build(cataclysm.MODID + ":ignited_revenant"));
 
@@ -113,6 +113,12 @@ public class ModEntities {
             .setTrackingRange(20)
             .setShouldReceiveVelocityUpdates(true)
             .build(cataclysm.MODID + ":ignis_fireball"));
+
+    public static final RegistryObject<EntityType<Ash_Breath_Entity>> ASH_BREATH = ENTITY_TYPE.register("ash_breath", () -> EntityType.Builder.<Ash_Breath_Entity>create(Ash_Breath_Entity::new, EntityClassification.MISC)
+            .size(0.0f, 0.0f)
+            .immuneToFire()
+            .setUpdateInterval(1)
+            .build(cataclysm.MODID + ":ash_breath"));
 
 
     @SubscribeEvent

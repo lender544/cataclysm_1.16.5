@@ -1,18 +1,20 @@
 package L_Ender.cataclysm.entity.projectile;
 
 import L_Ender.cataclysm.config.CMConfig;
+import L_Ender.cataclysm.entity.Netherite_Monstrosity_Entity;
+import L_Ender.cataclysm.entity.partentity.Netherite_Monstrosity_Part;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.projectile.DragonFireballEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.network.IPacket;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.*;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -20,7 +22,6 @@ import net.minecraftforge.fml.network.NetworkHooks;
 public class Lava_Bomb_Entity extends ThrowableEntity {
 
 
-    private boolean hasHit;
     public double prevMotionX, prevMotionY, prevMotionZ;
 
     public Lava_Bomb_Entity(EntityType type, World world) {
@@ -38,13 +39,35 @@ public class Lava_Bomb_Entity extends ThrowableEntity {
     }
 
     @Override
-    protected void onImpact(RayTraceResult ray) {
-        this.setMotion(0.0D, 0.0D, 0.0D);
-        this.hasHit = true;
-        if (!world.isRemote) {
-            this.doTerrainEffects();
+    protected void onImpact(RayTraceResult result) {
+        RayTraceResult.Type raytraceresult$type = result.getType();
+        if (raytraceresult$type == RayTraceResult.Type.ENTITY) {
+            this.onEntityHit((EntityRayTraceResult) result);
+        } else if (raytraceresult$type == RayTraceResult.Type.BLOCK) {
+            this.func_230299_a_((BlockRayTraceResult) result);
         }
     }
+
+    protected void onEntityHit(EntityRayTraceResult result) {
+        super.onEntityHit(result);
+        if (!this.world.isRemote && !(result.getEntity() instanceof Lava_Bomb_Entity || result.getEntity() instanceof Netherite_Monstrosity_Part || result.getEntity() instanceof Netherite_Monstrosity_Entity)) {
+            this.playSound(SoundEvents.ENTITY_GENERIC_BURN, 1.5f, 0.75f);
+            this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), CMConfig.Lavabombradius, Explosion.Mode.NONE);
+            this.doTerrainEffects();
+            remove();
+        }
+    }
+
+    protected void func_230299_a_(BlockRayTraceResult result) {
+        super.func_230299_a_(result);
+        if(!this.world.isRemote) {
+            this.playSound(SoundEvents.ENTITY_GENERIC_BURN, 1.5f, 0.75f);
+            this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), CMConfig.Lavabombradius, Explosion.Mode.NONE);
+            this.doTerrainEffects();
+            remove();
+        }
+    }
+
 
     private void doTerrainEffects() {
 
@@ -64,6 +87,18 @@ public class Lava_Bomb_Entity extends ThrowableEntity {
         }
     }
 
+
+    @Override
+    public void tick() {
+        super.tick();
+        prevMotionX = getMotion().x;
+        prevMotionY = getMotion().y;
+        prevMotionZ = getMotion().z;
+
+        rotationYaw = -((float) MathHelper.atan2(getMotion().x, getMotion().z)) * (180F / (float)Math.PI);
+        makeTrail();
+    }
+
     private void doTerrainEffect(BlockPos pos) {
         BlockState state = world.getBlockState(pos);
         if (state.getMaterial() == Material.WATER) {
@@ -74,28 +109,6 @@ public class Lava_Bomb_Entity extends ThrowableEntity {
         }
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-        prevMotionX = getMotion().x;
-        prevMotionY = getMotion().y;
-        prevMotionZ = getMotion().z;
-
-        rotationYaw = -((float) MathHelper.atan2(getMotion().x, getMotion().z)) * (180F / (float)Math.PI);
-
-        if (this.hasHit) {
-            this.getMotion().mul(0.1D, 0.1D, 0.1D);
-
-
-            if (!world.isRemote) {
-                this.playSound(SoundEvents.ENTITY_GENERIC_BURN, 1.5f, 0.75f);
-                this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), CMConfig.Lavabombradius, Explosion.Mode.NONE);
-                remove();
-            }
-        } else {
-            makeTrail();
-        }
-    }
 
     public void makeTrail() {
         for (int i = 0; i < 5; i++) {
@@ -113,7 +126,7 @@ public class Lava_Bomb_Entity extends ThrowableEntity {
 
     @Override
     protected float getGravityVelocity() {
-        return this.hasHit ? 0F : 0.025F;
+        return 0.025F;
     }
 
     @Override

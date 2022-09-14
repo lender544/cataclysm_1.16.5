@@ -41,6 +41,7 @@
   "item.cataclysm.netherite_monstrosity_spawn_egg": "네더라이트 괴물 생성 알",
   "item.cataclysm.nameless_sorcerer_spawn_egg": "이름없는 마법사 생성 알",
   "item.cataclysm.ignis_spawn_egg": "이그니스 생성 알",
+  "item.cataclysm.ignited_revenant_spawn_egg": "이그나이티드 레버넌트",
 
   "itemGroup.cataclysmtab": "대격변",
   "block.cataclysm.witherite_block": "위더라이트 블록",
@@ -84,6 +85,7 @@
   "entity.cataclysm.ignis_abyss_fireball": "이그니스의 심연 화염구",
   "entity.cataclysm.ignis_fireball": "이그니스의 화염구",
   "entity.cataclysm.ignited_revenant": "이그나이티드 레버넌트",
+  "entity.cataclysm.ashen_breath": "재의 숨결",
 
   "effect.cataclysm.monstrous": "괴력",
   "effect.cataclysm.blazing_brand": "불타는 낙인",
@@ -109,5 +111,18 @@
   "endermaptera_hurt.sub": "엔더마프테라가 상처를 입음",
   "endermaptera_step.sub": "엔더마프테라가 기어다님",
   "endermaptera_death.sub": "엔더마프테라가 죽음",
-  "voidrunerising.sub": "공허의 룬이 솟아남"
+  "voidrunerising.sub": "공허의 룬이 솟아남",
+
+  "advancements.cataclysm.root.title": "대격변",
+  "advancements.cataclysm.root.description": "대격변!",
+  "advancements.cataclysm.find_ruined_citadel.title": "폐허가 된 성채",
+  "advancements.cataclysm.find_ruined_citadel.description": "폐허가 된 성채를 찾으세요",
+  "advancements.cataclysm.find_soul_black_smith.title": "영혼의 대장간",
+  "advancements.cataclysm.find_soul_black_smith.description": "영혼 대장간을 찾으세요",
+  "advancements.cataclysm.kill_ender_golem.title": "팔레트 스왑",
+  "advancements.cataclysm.kill_ender_golem.description": "엔더 골렘을 처치하세요",
+  "advancements.cataclysm.kill_ender_guardian.title": "수호자의 비밀",
+  "advancements.cataclysm.kill_ender_guardian.description": "엔더 가디언을 쓰러뜨리세요",
+  "advancements.cataclysm.kill_monstrosity.title": "망가진 네더의 전쟁병기",
+  "advancements.cataclysm.kill_monstrosity.description": "네더라이트 괴물을 처치하세요"
 }

@@ -63,7 +63,7 @@ public class Ignis_Fireball_Entity extends DamagingProjectileEntity {
             this.remove();
         }
 
-        if (timer == 0) {
+        if (timer == 0 || timer == -40) {
             Entity entity = this.getShooter();
             if (entity instanceof MobEntity && ((MobEntity) entity).getAttackTarget() != null) {
                 LivingEntity target = ((MobEntity) entity).getAttackTarget();
@@ -88,6 +88,16 @@ public class Ignis_Fireball_Entity extends DamagingProjectileEntity {
 
     }
 
+    @Override
+    protected void onImpact(RayTraceResult result) {
+        RayTraceResult.Type raytraceresult$type = result.getType();
+        if (raytraceresult$type == RayTraceResult.Type.ENTITY) {
+            this.onEntityHit((EntityRayTraceResult) result);
+        } else if (raytraceresult$type == RayTraceResult.Type.BLOCK) {
+            this.func_230299_a_((BlockRayTraceResult) result);
+        }
+    }
+
     protected void onEntityHit(EntityRayTraceResult result) {
         super.onEntityHit(result);
         Entity shooter = this.getShooter();
@@ -110,7 +120,7 @@ public class Ignis_Fireball_Entity extends DamagingProjectileEntity {
             } else {
                 flag = entity.attackEntityFrom(DamageSource.MAGIC, 6.0F);
             }
-            this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), 1.0F, false, Explosion.Mode.NONE);
+            this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), 1.0F, true, Explosion.Mode.NONE);
             this.remove();
 
             if (flag && entity instanceof LivingEntity) {
@@ -135,7 +145,7 @@ public class Ignis_Fireball_Entity extends DamagingProjectileEntity {
     protected void func_230299_a_(BlockRayTraceResult result) {
         super.func_230299_a_(result);
         if (!this.world.isRemote && getFired()) {
-            this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), 1.0F, false, Explosion.Mode.NONE);
+            this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), 1.0F, true, Explosion.Mode.NONE);
             this.remove();
         }
 

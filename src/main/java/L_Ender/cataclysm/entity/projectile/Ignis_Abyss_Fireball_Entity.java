@@ -20,6 +20,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
@@ -60,7 +61,7 @@ public class Ignis_Abyss_Fireball_Entity extends DamagingProjectileEntity {
             this.remove();
         }
 
-        if (timer == 0) {
+        if (timer == 0 || timer == -40) {
             Entity entity = this.getShooter();
             if (entity instanceof MobEntity && ((MobEntity) entity).getAttackTarget() != null) {
                 LivingEntity target = ((MobEntity) entity).getAttackTarget();
@@ -106,7 +107,7 @@ public class Ignis_Abyss_Fireball_Entity extends DamagingProjectileEntity {
             } else {
                 flag = entity.attackEntityFrom(DamageSource.MAGIC, 6.0F);
             }
-            this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), 2.0F, false, Explosion.Mode.NONE);
+            this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), 2.0F, true, Explosion.Mode.NONE);
             this.remove();
             if (flag && entity instanceof LivingEntity) {
                 EffectInstance effectinstance1 = ((LivingEntity)entity).getActivePotionEffect(ModEffect.EFFECTBLAZING_BRAND.get());
@@ -160,7 +161,7 @@ public class Ignis_Abyss_Fireball_Entity extends DamagingProjectileEntity {
 
             if (this.ticksExisted > 500 || this.getTotalBounces() > 5) {
                 if (!this.world.isRemote) {
-                    this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), 2.0F, false, Explosion.Mode.NONE);
+                    this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), 2.0F, true, Explosion.Mode.NONE);
                     this.remove();
                 }
             } else {
@@ -170,6 +171,15 @@ public class Ignis_Abyss_Fireball_Entity extends DamagingProjectileEntity {
 
     }
 
+    @Override
+    protected void onImpact(RayTraceResult result) {
+        RayTraceResult.Type raytraceresult$type = result.getType();
+        if (raytraceresult$type == RayTraceResult.Type.ENTITY) {
+            this.onEntityHit((EntityRayTraceResult) result);
+        } else if (raytraceresult$type == RayTraceResult.Type.BLOCK) {
+            this.func_230299_a_((BlockRayTraceResult) result);
+        }
+    }
 
     public boolean canBeCollidedWith() {
         return true;

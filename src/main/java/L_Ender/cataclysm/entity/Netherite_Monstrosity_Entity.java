@@ -2,12 +2,16 @@ package L_Ender.cataclysm.entity;
 
 import L_Ender.cataclysm.cataclysm;
 import L_Ender.cataclysm.config.CMConfig;
+import L_Ender.cataclysm.entity.AI.AnimationGoal;
 import L_Ender.cataclysm.entity.AI.AttackMoveGoal;
 import L_Ender.cataclysm.entity.AI.CmAttackGoal;
+import L_Ender.cataclysm.entity.AI.SimpleAnimationGoal;
 import L_Ender.cataclysm.entity.effect.ScreenShake_Entity;
 import L_Ender.cataclysm.entity.etc.CMPathNavigateGround;
 import L_Ender.cataclysm.entity.etc.GroundPathNavigatorWide;
 import L_Ender.cataclysm.entity.etc.SmartBodyHelper2;
+import L_Ender.cataclysm.entity.partentity.Cm_Part_Entity;
+import L_Ender.cataclysm.entity.partentity.Netherite_Monstrosity_Part;
 import L_Ender.cataclysm.entity.projectile.Lava_Bomb_Entity;
 import L_Ender.cataclysm.init.ModEntities;
 import L_Ender.cataclysm.init.ModSounds;
@@ -77,6 +81,8 @@ public class Netherite_Monstrosity_Entity extends Boss_monster {
     public static final Animation MONSTROSITY_EARTHQUAKE3 = Animation.create(70);
     public static final Animation MONSTROSITY_BERSERK = Animation.create(80);
     public static final Animation MONSTROSITY_DEATH = Animation.create(185);
+    public final Netherite_Monstrosity_Part headPart;
+    public final Netherite_Monstrosity_Part[] monstrosityParts;
     private static final DataParameter<Boolean> IS_BERSERK = EntityDataManager.createKey(Netherite_Monstrosity_Entity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> IS_AWAKEN = EntityDataManager.createKey(Netherite_Monstrosity_Entity.class, DataSerializers.BOOLEAN);
     private int lavabombmagazine = CMConfig.Lavabombmagazine;
@@ -90,6 +96,8 @@ public class Netherite_Monstrosity_Entity extends Boss_monster {
         this.experienceValue = 300;
         this.stepHeight = 1.75F;
         this.dropAfterDeathAnim = true;
+        this.headPart = new Netherite_Monstrosity_Part(this,1.6F, 2.5F);
+        this.monstrosityParts = new Netherite_Monstrosity_Part[]{this.headPart};
         this.setPathPriority(PathNodeType.LAVA, 8.0F);
         this.setPathPriority(PathNodeType.UNPASSABLE_RAIL, 0.0F);
         this.setPathPriority(PathNodeType.WATER, -1.0F);
@@ -104,11 +112,11 @@ public class Netherite_Monstrosity_Entity extends Boss_monster {
     }
 
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new BerserkGoal());
+        this.goalSelector.addGoal(0, new BerserkGoal(this,MONSTROSITY_BERSERK));
         this.goalSelector.addGoal(0, new AwakenGoal());
-        this.goalSelector.addGoal(1, new HealGoal());
-        this.goalSelector.addGoal(1, new ShootGoal());
-        this.goalSelector.addGoal(1, new EarthQuakeGoal());
+        this.goalSelector.addGoal(1, new HealGoal(this, MONSTROSITY_CHARGE));
+        this.goalSelector.addGoal(1, new ShootGoal(this, MONSTROSITY_ERUPTIONATTACK));
+        this.goalSelector.addGoal(1, new EarthQuakeGoal(this));
         this.goalSelector.addGoal(2, new AttackMoveGoal(this, true,1.0D));
         this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
@@ -124,7 +132,7 @@ public class Netherite_Monstrosity_Entity extends Boss_monster {
                 .createMutableAttribute(Attributes.FOLLOW_RANGE, 50.0D)
                 .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25F)
                 .createMutableAttribute(Attributes.ATTACK_DAMAGE, 22)
-                .createMutableAttribute(Attributes.MAX_HEALTH, 360)
+                .createMutableAttribute(Attributes.MAX_HEALTH, 500)
                 .createMutableAttribute(Attributes.ARMOR, 10)
                 .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1.0);
     }
@@ -191,6 +199,10 @@ public class Netherite_Monstrosity_Entity extends Boss_monster {
 
     protected int decreaseAirSupply(int air) {
         return air;
+    }
+
+    public boolean attackEntityFromPart(Netherite_Monstrosity_Part netherite_monstrosity_part, DamageSource source, float amount) {
+        return this.attackEntityFrom(source, amount);
     }
 
     @Override
@@ -340,6 +352,28 @@ public class Netherite_Monstrosity_Entity extends Boss_monster {
                 this.setIsAwaken(true);
             }
         }
+        if (!this.isAIDisabled()) {
+            Vector3d[] avector3d = new Vector3d[this.monstrosityParts.length];
+            float f17 = this.rotationYaw * ((float) Math.PI / 180F);
+            float pitch = this.rotationPitch * ((float) Math.PI / 180F);
+            float f3 = MathHelper.sin(f17) * (1 - Math.abs(this.rotationPitch / 90F));
+            float f18 = MathHelper.cos(f17) * (1 - Math.abs(this.rotationPitch / 90F));
+            for (int j = 0; j < this.monstrosityParts.length; ++j) {
+                avector3d[j] = new Vector3d(this.monstrosityParts[j].getPosX(), this.monstrosityParts[j].getPosY(), this.monstrosityParts[j].getPosZ());
+            }
+
+            this.setPartPosition(this.headPart, f3 * -1.65F, pitch + 3F, -f18 * -1.65F);
+
+            for (int l = 0; l < this.monstrosityParts.length; ++l) {
+                this.monstrosityParts[l].prevPosX = avector3d[l].x;
+                this.monstrosityParts[l].prevPosY = avector3d[l].y;
+                this.monstrosityParts[l].prevPosZ = avector3d[l].z;
+                this.monstrosityParts[l].lastTickPosX = avector3d[l].x;
+                this.monstrosityParts[l].lastTickPosY = avector3d[l].y;
+                this.monstrosityParts[l].lastTickPosZ = avector3d[l].z;
+            }
+        }
+
     }
 
     @Override
@@ -525,6 +559,20 @@ public class Netherite_Monstrosity_Entity extends Boss_monster {
         return itementity;
     }
 
+    private void setPartPosition(Netherite_Monstrosity_Part part, double offsetX, double offsetY, double offsetZ) {
+        part.setPosition(this.getPosX() + offsetX * part.scale, this.getPosY() + offsetY * part.scale, this.getPosZ() + offsetZ * part.scale);
+    }
+
+    @Override
+    public boolean isMultipartEntity() {
+        return true;
+    }
+
+    @Override
+    public net.minecraftforge.entity.PartEntity<?>[] getParts() {
+        return this.monstrosityParts;
+    }
+
     public void travel(Vector3d travelVector) {
         this.setAIMoveSpeed((float) this.getAttributeValue(Attributes.MOVEMENT_SPEED) * (isInLava() ? 0.2F : 1F));
         if (this.isServerWorld() && this.isInLava()) {
@@ -572,14 +620,18 @@ public class Netherite_Monstrosity_Entity extends Boss_monster {
         return MONSTROSITY_DEATH;
     }
 
-    class EarthQuakeGoal extends Goal {
+    class EarthQuakeGoal extends AnimationGoal<Netherite_Monstrosity_Entity> {
 
-        public EarthQuakeGoal() {
-            this.setMutexFlags(EnumSet.of(Goal.Flag.JUMP, Goal.Flag.LOOK, Goal.Flag.MOVE));
+        public EarthQuakeGoal(Netherite_Monstrosity_Entity entity) {
+            super(entity);
+            //this.setFlags(EnumSet.of(Flag.JUMP, Flag.LOOK));
         }
 
-        public boolean shouldExecute() {
-            return Netherite_Monstrosity_Entity.this.getAnimation() == MONSTROSITY_EARTHQUAKE || Netherite_Monstrosity_Entity.this.getAnimation() == MONSTROSITY_EARTHQUAKE2 || Netherite_Monstrosity_Entity.this.getAnimation() == MONSTROSITY_EARTHQUAKE3;
+        @Override
+        protected boolean test(Animation animation) {
+            return animation == MONSTROSITY_EARTHQUAKE
+                    || animation == MONSTROSITY_EARTHQUAKE2
+                    || animation == MONSTROSITY_EARTHQUAKE3;
         }
 
         @Override
@@ -623,22 +675,12 @@ public class Netherite_Monstrosity_Entity extends Boss_monster {
 
 
 
-    class ShootGoal extends Goal {
+    class ShootGoal extends SimpleAnimationGoal<Netherite_Monstrosity_Entity> {
 
-
-        public ShootGoal() {
-            this.setMutexFlags(EnumSet.of(Goal.Flag.JUMP, Goal.Flag.LOOK, Goal.Flag.MOVE));
+        public ShootGoal(Netherite_Monstrosity_Entity entity, Animation animation) {
+            super(entity, animation);
         }
 
-        @Override
-        public boolean shouldExecute() {
-            return Netherite_Monstrosity_Entity.this.getAnimation() == MONSTROSITY_ERUPTIONATTACK;
-        }
-
-        @Override
-        public void resetTask() {
-            super.resetTask();
-        }
 
         @Override
         public void tick() {
@@ -653,9 +695,9 @@ public class Netherite_Monstrosity_Entity extends Boss_monster {
                     Netherite_Monstrosity_Entity.this.lavabombmagazine--;
                     for (int i = 0; i < lavabombcount; ++i) {
                         Lava_Bomb_Entity lava = new Lava_Bomb_Entity(ModEntities.LAVA_BOMB.get(), Netherite_Monstrosity_Entity.this.world, Netherite_Monstrosity_Entity.this);
-                        double d0 = target.getPosX() - Netherite_Monstrosity_Entity.this.getPosX();
+                        double d0 = target.getPosX() - Netherite_Monstrosity_Entity.this.headPart.getPosX();
                         double d1 = target.getBoundingBox().minY + target.getHeight() / 3.0F - lava.getPosY();
-                        double d2 = target.getPosZ() - Netherite_Monstrosity_Entity.this.getPosZ();
+                        double d2 = target.getPosZ() - Netherite_Monstrosity_Entity.this.headPart.getPosZ();
                         double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
                         lava.shoot(d0, d1 + d3 * 0.20000000298023224D, d2, 1.0F, 24 - Netherite_Monstrosity_Entity.this.world.getDifficulty().getId() * 4);
                         Netherite_Monstrosity_Entity.this.world.addEntity(lava);
@@ -665,20 +707,10 @@ public class Netherite_Monstrosity_Entity extends Boss_monster {
         }
     }
 
-    class BerserkGoal extends Goal {
+    class BerserkGoal extends SimpleAnimationGoal<Netherite_Monstrosity_Entity> {
 
-        public BerserkGoal() {
-            this.setMutexFlags(EnumSet.of(Goal.Flag.JUMP, Goal.Flag.LOOK, Goal.Flag.MOVE));
-        }
-
-        @Override
-        public boolean shouldExecute() {
-            return Netherite_Monstrosity_Entity.this.getAnimation() == MONSTROSITY_BERSERK;
-        }
-
-        @Override
-        public void resetTask() {
-            super.resetTask();
+        public BerserkGoal(Netherite_Monstrosity_Entity entity, Animation animation) {
+            super(entity, animation);
         }
 
         @Override
@@ -692,10 +724,10 @@ public class Netherite_Monstrosity_Entity extends Boss_monster {
         }
     }
 
-    class HealGoal extends Goal {
+    class HealGoal extends SimpleAnimationGoal<Netherite_Monstrosity_Entity> {
 
-        public HealGoal() {
-            this.setMutexFlags(EnumSet.of(Goal.Flag.JUMP, Goal.Flag.LOOK, Goal.Flag.MOVE));
+        public HealGoal(Netherite_Monstrosity_Entity entity, Animation animation) {
+            super(entity, animation);
         }
 
         @Override

@@ -5,7 +5,9 @@ import L_Ender.cataclysm.client.render.layer.Ender_Golem_Layer;
 import L_Ender.cataclysm.client.render.layer.LayerGenericGlowing;
 import L_Ender.cataclysm.client.render.layer.Netherite_Monstrosity_Layer;
 import L_Ender.cataclysm.entity.Netherite_Monstrosity_Entity;
+import L_Ender.cataclysm.entity.partentity.Netherite_Monstrosity_Part;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.renderer.culling.ClippingHelper;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
@@ -25,6 +27,19 @@ public class RendererNetherite_Monstrosity extends MobRenderer<Netherite_Monstro
     @Override
     public ResourceLocation getEntityTexture(Netherite_Monstrosity_Entity entity) {
         return NETHER_MONSTROSITY_TEXTURES;
+    }
+
+    public boolean shouldRender(Netherite_Monstrosity_Entity livingEntityIn, ClippingHelper camera, double camX, double camY, double camZ) {
+        if (super.shouldRender(livingEntityIn, camera, camX, camY, camZ)) {
+            return true;
+        } else {
+            for(Netherite_Monstrosity_Part part : livingEntityIn.monstrosityParts){
+                if(camera.isBoundingBoxInFrustum(part.getBoundingBox())){
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     @Override
