@@ -114,11 +114,11 @@ public class ModEntities {
             .setShouldReceiveVelocityUpdates(true)
             .build(cataclysm.MODID + ":ignis_fireball"));
 
-    public static final RegistryObject<EntityType<Ash_Breath_Entity>> ASH_BREATH = ENTITY_TYPE.register("ash_breath", () -> EntityType.Builder.<Ash_Breath_Entity>create(Ash_Breath_Entity::new, EntityClassification.MISC)
-            .size(0.0f, 0.0f)
+    public static final RegistryObject<EntityType<Ashen_Breath_Entity>> ASHEN_BREATH = ENTITY_TYPE.register("ashen_breath", () -> EntityType.Builder.<Ashen_Breath_Entity>create(Ashen_Breath_Entity::new, EntityClassification.MISC)
+            .size(0.01f, 0.01f)
             .immuneToFire()
             .setUpdateInterval(1)
-            .build(cataclysm.MODID + ":ash_breath"));
+            .build(cataclysm.MODID + ":ashen_breath"));
 
 
     @SubscribeEvent

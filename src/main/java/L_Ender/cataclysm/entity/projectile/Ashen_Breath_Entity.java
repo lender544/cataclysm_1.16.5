@@ -19,18 +19,18 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public class Ash_Breath_Entity extends Entity {
+public class Ashen_Breath_Entity extends Entity {
     private static final int RANGE = 7;
     private static final int ARC = 45;
     private LivingEntity caster;
     private UUID casterUuid;
 
-    public Ash_Breath_Entity(EntityType<? extends Ash_Breath_Entity> type, World world) {
+    public Ashen_Breath_Entity(EntityType<? extends Ashen_Breath_Entity> type, World world) {
         super(type, world);
 
     }
 
-    public Ash_Breath_Entity(EntityType<? extends Ash_Breath_Entity> type, World world, LivingEntity caster) {
+    public Ashen_Breath_Entity(EntityType<? extends Ashen_Breath_Entity> type, World world, LivingEntity caster) {
         super(type, world);
         this.setCaster(caster);
 

@@ -5,7 +5,7 @@ import L_Ender.cataclysm.entity.AI.AttackMoveGoal;
 import L_Ender.cataclysm.entity.AI.SimpleAnimationGoal;
 import L_Ender.cataclysm.entity.etc.CMPathNavigateGround;
 import L_Ender.cataclysm.entity.etc.SmartBodyHelper2;
-import L_Ender.cataclysm.entity.projectile.Ash_Breath_Entity;
+import L_Ender.cataclysm.entity.projectile.Ashen_Breath_Entity;
 import L_Ender.cataclysm.init.ModEntities;
 import L_Ender.cataclysm.init.ModSounds;
 import com.github.alexthe666.citadel.animation.Animation;
@@ -251,7 +251,7 @@ public class Ignited_Revenant_Entity extends Boss_monster {
             mouthPos = mouthPos.rotateYaw((float) Math.toRadians(-rotationYaw - 90));
             mouthPos = mouthPos.add(getPositionVec());
             mouthPos = mouthPos.add(new Vector3d(0, 0, 0).rotatePitch((float) Math.toRadians(-rotationPitch)).rotateYaw((float) Math.toRadians(-rotationYawHead)));
-            Ash_Breath_Entity breath = new Ash_Breath_Entity(ModEntities.ASH_BREATH.get(), Ignited_Revenant_Entity.this.world, Ignited_Revenant_Entity.this);
+            Ashen_Breath_Entity breath = new Ashen_Breath_Entity(ModEntities.ASHEN_BREATH.get(), Ignited_Revenant_Entity.this.world, Ignited_Revenant_Entity.this);
             if (Ignited_Revenant_Entity.this.getAnimationTick() == 27) {
                 breath.setPositionAndRotation(mouthPos.x, mouthPos.y, mouthPos.z, Ignited_Revenant_Entity.this.rotationYawHead, Ignited_Revenant_Entity.this.rotationPitch);
                 Ignited_Revenant_Entity.this.world.addEntity(breath);

@@ -74,7 +74,7 @@ public class Ignis_Fireball_Entity extends DamagingProjectileEntity {
                 double d0 = target.getPosX() - this.getPosX();
                 double d1 = target.getPosY() + target.getHeight() * 0.5F - this.getPosY();
                 double d2 = target.getPosZ() - this.getPosZ();
-                float speed = this.isSoul() ? 2.5F : 2.0F;
+                float speed = this.isSoul() ? 2.25F : 1.8F;
                 shoot(d0, d1, d2, speed, 0);
                 this.rotationYaw = -((float) MathHelper.atan2(d0, d2)) * (180F / (float) Math.PI);
 
