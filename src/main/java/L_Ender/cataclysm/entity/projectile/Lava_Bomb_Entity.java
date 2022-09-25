@@ -50,9 +50,10 @@ public class Lava_Bomb_Entity extends ThrowableEntity {
 
     protected void onEntityHit(EntityRayTraceResult result) {
         super.onEntityHit(result);
+        Entity shooter = this.getShooter();
         if (!this.world.isRemote && !(result.getEntity() instanceof Lava_Bomb_Entity || result.getEntity() instanceof Netherite_Monstrosity_Part || result.getEntity() instanceof Netherite_Monstrosity_Entity)) {
             this.playSound(SoundEvents.ENTITY_GENERIC_BURN, 1.5f, 0.75f);
-            this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), CMConfig.Lavabombradius, Explosion.Mode.NONE);
+            this.world.createExplosion(shooter, this.getPosX(), this.getPosY(), this.getPosZ(), CMConfig.Lavabombradius, Explosion.Mode.NONE);
             this.doTerrainEffects();
             remove();
         }
@@ -60,9 +61,10 @@ public class Lava_Bomb_Entity extends ThrowableEntity {
 
     protected void func_230299_a_(BlockRayTraceResult result) {
         super.func_230299_a_(result);
+        Entity shooter = this.getShooter();
         if(!this.world.isRemote) {
             this.playSound(SoundEvents.ENTITY_GENERIC_BURN, 1.5f, 0.75f);
-            this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), CMConfig.Lavabombradius, Explosion.Mode.NONE);
+            this.world.createExplosion(shooter, this.getPosX(), this.getPosY(), this.getPosZ(), CMConfig.Lavabombradius, Explosion.Mode.NONE);
             this.doTerrainEffects();
             remove();
         }

@@ -3,6 +3,7 @@ package L_Ender.cataclysm.init;
 
 import L_Ender.cataclysm.cataclysm;
 import L_Ender.cataclysm.entity.*;
+import L_Ender.cataclysm.entity.effect.Flame_Strike_Entity;
 import L_Ender.cataclysm.entity.effect.ScreenShake_Entity;
 import L_Ender.cataclysm.entity.projectile.*;
 import L_Ender.cataclysm.items.Modspawnegg;
@@ -113,6 +114,13 @@ public class ModEntities {
             .setTrackingRange(20)
             .setShouldReceiveVelocityUpdates(true)
             .build(cataclysm.MODID + ":ignis_fireball"));
+
+    public static final RegistryObject<EntityType<Flame_Strike_Entity>> FLAME_STRIKE = ENTITY_TYPE.register("flame_strike", () -> EntityType.Builder.<Flame_Strike_Entity>create(Flame_Strike_Entity::new, EntityClassification.MISC)
+            .size(6.0F, 0.5F)
+            .immuneToFire()
+            .setTrackingRange(10)
+            .updateInterval(Integer.MAX_VALUE)
+            .build(cataclysm.MODID + ":flame_strike"));
 
     public static final RegistryObject<EntityType<Ashen_Breath_Entity>> ASHEN_BREATH = ENTITY_TYPE.register("ashen_breath", () -> EntityType.Builder.<Ashen_Breath_Entity>create(Ashen_Breath_Entity::new, EntityClassification.MISC)
             .size(0.01f, 0.01f)
