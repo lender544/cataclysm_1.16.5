@@ -3,6 +3,7 @@ package L_Ender.cataclysm.init;
 
 import L_Ender.cataclysm.cataclysm;
 import L_Ender.cataclysm.entity.*;
+import L_Ender.cataclysm.entity.effect.Cm_Falling_Block_Entity;
 import L_Ender.cataclysm.entity.effect.Flame_Strike_Entity;
 import L_Ender.cataclysm.entity.effect.ScreenShake_Entity;
 import L_Ender.cataclysm.entity.projectile.*;
@@ -121,6 +122,12 @@ public class ModEntities {
             .setTrackingRange(10)
             .updateInterval(Integer.MAX_VALUE)
             .build(cataclysm.MODID + ":flame_strike"));
+
+    public static final RegistryObject<EntityType<Cm_Falling_Block_Entity>> CM_FALLING_BLOCK = ENTITY_TYPE.register("cm_falling_block", () -> EntityType.Builder.<Cm_Falling_Block_Entity>create(Cm_Falling_Block_Entity::new, EntityClassification.MISC)
+            .size(0.98F, 0.98F)
+            .setTrackingRange(10)
+            .updateInterval(20)
+            .build(cataclysm.MODID + ":cm_falling_block"));
 
     public static final RegistryObject<EntityType<Ashen_Breath_Entity>> ASHEN_BREATH = ENTITY_TYPE.register("ashen_breath", () -> EntityType.Builder.<Ashen_Breath_Entity>create(Ashen_Breath_Entity::new, EntityClassification.MISC)
             .size(0.01f, 0.01f)

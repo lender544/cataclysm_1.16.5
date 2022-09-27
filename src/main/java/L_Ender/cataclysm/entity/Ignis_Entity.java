@@ -2,6 +2,7 @@ package L_Ender.cataclysm.entity;
 
 import L_Ender.cataclysm.config.CMConfig;
 import L_Ender.cataclysm.entity.AI.*;
+import L_Ender.cataclysm.entity.effect.Cm_Falling_Block_Entity;
 import L_Ender.cataclysm.entity.effect.Flame_Strike_Entity;
 import L_Ender.cataclysm.entity.effect.ScreenShake_Entity;
 import L_Ender.cataclysm.entity.etc.CMPathNavigateGround;
@@ -68,7 +69,7 @@ public class Ignis_Entity extends Boss_monster {
     private final ServerBossInfo bossInfo = (ServerBossInfo) (new ServerBossInfo(this.getDisplayName(), BossInfo.Color.YELLOW, BossInfo.Overlay.PROGRESS)).setDarkenSky(false);
     public static final Animation SWING_ATTACK = Animation.create(55);
     public static final Animation SWING_ATTACK_SOUL = Animation.create(46);
-    public static final Animation SWING_ATTACK_BERSERK = Animation.create(34);
+    public static final Animation SWING_ATTACK_BERSERK = Animation.create(37);
     public static final Animation HORIZONTAL_SWING_ATTACK = Animation.create(68);
     public static final Animation HORIZONTAL_SWING_ATTACK_SOUL = Animation.create(58);
     public static final Animation SHIELD_SMASH_ATTACK = Animation.create(70);
@@ -221,7 +222,7 @@ public class Ignis_Entity extends Boss_monster {
         this.goalSelector.addGoal(1, new AttackAnimationGoal1<>(this, BREAK_THE_SHIELD, 35, false));
         this.goalSelector.addGoal(1, new AttackAnimationGoal1<>(this, VERTICAL_COMBO, 10, true));
         this.goalSelector.addGoal(1, new AttackAnimationGoal1<>(this, MAGIC_ATTACK, 49, true));
-        this.goalSelector.addGoal(1, new AttackAnimationGoal1<Ignis_Entity>(this, ULTIMATE_ATTACK, 50, true) {
+        this.goalSelector.addGoal(1, new AttackAnimationGoal1<Ignis_Entity>(this, ULTIMATE_ATTACK, 72, true) {
             @Override
             public void startExecuting() {
                 super.startExecuting();
@@ -245,7 +246,7 @@ public class Ignis_Entity extends Boss_monster {
         this.goalSelector.addGoal(1, new Air_Smash(this, SMASH_IN_AIR));
         this.goalSelector.addGoal(1, new Swing_Attack_Goal(this, SWING_ATTACK, 24, 30));
         this.goalSelector.addGoal(1, new Swing_Attack_Goal(this, SWING_ATTACK_SOUL, 18, 24));
-        this.goalSelector.addGoal(1, new Swing_Attack_Goal(this, SWING_ATTACK_BERSERK, 14, 20));
+        this.goalSelector.addGoal(1, new Swing_Attack_Goal(this, SWING_ATTACK_BERSERK, 17, 23));
         this.goalSelector.addGoal(1, new Hornzontal_Small_SwingGoal(this, 19, 13, 12,21));
         this.goalSelector.addGoal(1, new Body_Check_Attack(this));
         this.goalSelector.addGoal(1, new Earth_Shudders(this, EARTH_SHUDDERS_ATTACK));
@@ -734,6 +735,13 @@ public class Ignis_Entity extends Boss_monster {
             }
         }
 
+        if (this.getAnimation() == SWING_ATTACK_BERSERK) {
+            if (this.getAnimationTick() == 17) {
+                this.playSound(ModSounds.STRONGSWING.get(), 1.0f, 1F + this.getRNG().nextFloat() * 0.1F);
+                AreaAttack(6.5f, 6, 70, 1.0f, 0.05f, 80, 2, brand, 7,false, 0);
+            }
+        }
+
         if (this.getAnimation() == HORIZONTAL_SWING_ATTACK_SOUL) {
             if (this.getAnimationTick() == 27) {
                 this.playSound(ModSounds.STRONGSWING.get(), 1.0f, 1F + this.getRNG().nextFloat() * 0.1F);
@@ -1095,7 +1103,7 @@ public class Ignis_Entity extends Boss_monster {
 
         if (this.getAnimation() == SWING_UPPERCUT) {
             if (this.getAnimationTick() == 32) {
-                BodyCheckAttack(4.5f, 8, 210, 1.0f, 0.03f, 60, 70, 0.8);
+                BodyCheckAttack(4.5f, 8, 120, 1.0f, 0.03f, 60, 70, 0.8);
             }
         }
         if (this.getAnimation() == SWING_UPPERSLASH) {
@@ -1136,11 +1144,10 @@ public class Ignis_Entity extends Boss_monster {
                 ShieldSmashparticle(0.75f, 1.85f, -0.6f);
             }
 
-            for(int i = 73, j = 16; i <= 85; i = i + 2 ,j= j - 2) {
+            for(int i = 73, j = 16; i <= 85; i = i + 3 ,j= j - 2) {
                 if (this.getAnimationTick() == i) {
-                    ShieldSmashDamage(2f, j, 3f, 2.3f, false, 80, 1.0f, 0.08f, 0.05f);
-                    ShieldSmashDamage(2f, j-1, 3f, 2.3f, false, 80, 1.0f, 0.08f, 0.05f);
-
+                    ShieldSmashDamage(2f, j, 3f, 2.3f, true, 80, 1.0f, 0.08f, 0.05f);
+                    ShieldSmashDamage(2f, j-1, 3f, 2.3f, true, 80, 1.0f, 0.08f, 0.05f);
                 }
             }
 
@@ -1253,11 +1260,13 @@ public class Ignis_Entity extends Boss_monster {
                 }else{
                     for(int l = 0; l < 8; ++l) {
                         double d2 = 4.25D * (double) (l + 2);
-                        int j2 = (int) (2.5F * l);
+                        int j2 = (int) (1.5F * l);
                         this.spawnFlameStrike(this.getPosX() + f1 * d2, this.getPosZ() + f2 * d2, this.getPosY(), this.getPosY(), f0, 60, j2,j2,2.0f,false);
                     }
                 }
-                for(int l = 8; l < 40; ++l) {
+                for(int l = 4; l < 40; ++l) {
+                    UltimateAttack(l, 3, 1.5F, 150, 1.2F, 0.1F, 1);
+                    UltimateAttack(l, 3, -1.5F, 150, 1.2F, 0.1F, 1);
                     UltimateAttack(l, 3, 2.5F, 150, 1.2F, 0.1F, 1);
                     UltimateAttack(l, 3, -2.5F, 150, 1.2F, 0.1F, 1);
                     UltimateAttack(l, 3, 3.5F, 150, 1.2F, 0.1F, 1);
@@ -1567,20 +1576,17 @@ public class Ignis_Entity extends Boss_monster {
                 double px = this.getPosX() + vx * distance + vec * Math.cos((renderYawOffset + 90) * Math.PI / 180);
                 double pz = this.getPosZ() + vz * distance + vec * Math.sin((renderYawOffset + 90) * Math.PI / 180);
                 float factor = 1 - distance / (float) 12;
-                if(!this.world.isRemote) {
-                    if (ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
-                        int hitX = MathHelper.floor(px);
-                        int hitZ = MathHelper.floor(pz);
-                        BlockPos pos = new BlockPos(hitX, hitY, hitZ);
-                        BlockPos abovePos = new BlockPos(pos).up();
-                        BlockState block = world.getBlockState(pos);
-                        BlockState blockAbove = world.getBlockState(abovePos);
-                        if (rand.nextInt(2) == 1 && block.getMaterial() != Material.AIR && !block.getBlock().hasTileEntity(block) && !blockAbove.getMaterial().blocksMovement() && !BlockTags.getCollection().get(ModTag.NETHERITE_MONSTROSITY_IMMUNE).contains(block.getBlock())) {
-                            FallingBlockEntity fallingBlockEntity = new FallingBlockEntity(world, hitX + 0.5D, hitY + 0.5D, hitZ + 0.5D, block);
-                            fallingBlockEntity.addVelocity(0, 0.2D + getRNG().nextGaussian() * 0.15D, 0);
-                            world.addEntity(fallingBlockEntity);
-                        }
-                    }
+                int hitX = MathHelper.floor(px);
+                int hitZ = MathHelper.floor(pz);
+                BlockPos pos = new BlockPos(hitX, hitY, hitZ);
+                BlockPos abovePos = new BlockPos(pos).up();
+                BlockState block = world.getBlockState(pos);
+                BlockState blockAbove = world.getBlockState(abovePos);
+                if (block.getMaterial() != Material.AIR && !block.getBlock().hasTileEntity(block) && !blockAbove.getMaterial().blocksMovement()) {
+                    Cm_Falling_Block_Entity fallingBlockEntity = new Cm_Falling_Block_Entity(world, hitX + 0.5D, hitY + 0.5D, hitZ + 0.5D, block,10);
+                    fallingBlockEntity.addVelocity(0, 0.2D + getRNG().nextGaussian() * 0.15D, 0);
+                    world.addEntity(fallingBlockEntity);
+
                 }
                 AxisAlignedBB selection = new AxisAlignedBB(px - 0.5, minY, pz - 0.5, px + 0.5, maxY, pz + 0.5);
                 List<LivingEntity> hit = world.getEntitiesWithinAABB(LivingEntity.class, selection);
@@ -1623,19 +1629,19 @@ public class Ignis_Entity extends Boss_monster {
         double extraZ = distance * MathHelper.cos(angle);
         double px = this.getPosX() + extraX + f * math;
         double pz = this.getPosZ() + extraZ + f1 * math;
-        if(!this.world.isRemote) {
-            if (ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
-                int hitX = MathHelper.floor(px);
-                int hitZ = MathHelper.floor(pz);
-                BlockPos pos = new BlockPos(hitX, hitY, hitZ);
-                BlockPos abovePos = new BlockPos(pos).up();
-                BlockState block = world.getBlockState(pos);
-                BlockState blockAbove = world.getBlockState(abovePos);
-                if (rand.nextInt(2) == 1 && block.getMaterial() != Material.AIR && !block.getBlock().hasTileEntity(block) && !blockAbove.getMaterial().blocksMovement() && !BlockTags.getCollection().get(ModTag.NETHERITE_MONSTROSITY_IMMUNE).contains(block.getBlock())) {
-                    FallingBlockEntity fallingBlockEntity = new FallingBlockEntity(world, hitX + 0.5D, hitY + 0.5D, hitZ + 0.5D, block);
-                    fallingBlockEntity.addVelocity(0, 0.2D + getRNG().nextGaussian() * 0.15D, 0);
-                    world.addEntity(fallingBlockEntity);
-                }
+
+        if (ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
+            int hitX = MathHelper.floor(px);
+            int hitZ = MathHelper.floor(pz);
+            BlockPos pos = new BlockPos(hitX, hitY, hitZ);
+            BlockPos abovePos = new BlockPos(pos).up();
+            BlockState block = world.getBlockState(pos);
+            BlockState blockAbove = world.getBlockState(abovePos);
+            if (block.getMaterial() != Material.AIR && !block.getBlock().hasTileEntity(block) && !blockAbove.getMaterial().blocksMovement() && !BlockTags.getCollection().get(ModTag.NETHERITE_MONSTROSITY_IMMUNE).contains(block.getBlock())) {
+                Cm_Falling_Block_Entity fallingBlockEntity = new Cm_Falling_Block_Entity(world, hitX + 0.5D, hitY + 0.5D, hitZ + 0.5D, block,10);
+                fallingBlockEntity.addVelocity(0, 0.2D + getRNG().nextGaussian() * 0.15D, 0);
+                world.addEntity(fallingBlockEntity);
+
             }
         }
             AxisAlignedBB selection = new AxisAlignedBB(px - 0.5, minY, pz - 0.5, px + 0.5, maxY, pz + 0.5);

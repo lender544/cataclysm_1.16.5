@@ -149,7 +149,7 @@ public class Flame_Strike_Entity extends Entity {
                     this.setRadius(getRadius() - 0.1F);
                 }else{
                     if(!this.isSoul()) {
-                        this.world.createExplosion(this.owner, this.getPosX(), this.getPosY(), this.getPosZ(), 1, Explosion.Mode.NONE);
+                        this.world.createExplosion(this.owner, this.getPosX(), this.getPosY(), this.getPosZ(), 2, Explosion.Mode.NONE);
                     }
                     this.remove();
                 }
