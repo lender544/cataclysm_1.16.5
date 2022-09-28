@@ -6,12 +6,15 @@ import com.github.alexthe666.citadel.animation.Animation;
 import com.github.alexthe666.citadel.animation.IAnimatedEntity;
 import net.minecraft.entity.LivingEntity;
 
+import java.util.EnumSet;
+
 
 public class AttackAnimationGoal2<T extends Boss_monster & IAnimatedEntity> extends SimpleAnimationGoal<T> {
     private final int look1;
     private final int look2;
     public AttackAnimationGoal2(T entity, Animation animation, int look1, int look2) {
         super(entity, animation);
+        this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
         this.look1 = look1;
         this.look2 = look2;
     }

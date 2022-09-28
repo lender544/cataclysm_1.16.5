@@ -690,7 +690,7 @@ public class Ignis_Entity extends Boss_monster {
                     this.setAnimation(animation3);
                 } else if ((blockingProgress == 10 || swordProgress == 10) && !isAIDisabled() && this.getAnimation() == NO_ANIMATION && this.getDistance(target) < 3F && this.getRNG().nextFloat() * 100.0F < 20f && !this.getIsShieldBreak()) {
                     this.setAnimation(SHIELD_SMASH_ATTACK);
-                } else if ((blockingProgress == 10 || swordProgress == 10) && !isAIDisabled() && this.getAnimation() == NO_ANIMATION && this.getDistance(target) < 5F && this.getRNG().nextFloat() * 100.0F < 0.7f && counter_strike_cooldown <= 0) {
+                } else if ((blockingProgress == 10 || swordProgress == 10) && !isAIDisabled() && this.getAnimation() == NO_ANIMATION && this.getDistance(target) < 5F && this.getRNG().nextFloat() * 100.0F < 0.7f && counter_strike_cooldown <= 0 && !target.isPotionActive(ModEffect.EFFECTSTUN.get()) ) {
                     counter_strike_cooldown = CONTER_STRIKE_COOLDOWN;
                     Animation counter = this.getIsShieldBreak() ? SHIELD_BREAK_COUNTER : COUNTER;
                     this.setAnimation(counter);
@@ -1583,7 +1583,7 @@ public class Ignis_Entity extends Boss_monster {
                 BlockState block = world.getBlockState(pos);
                 BlockState blockAbove = world.getBlockState(abovePos);
                 if (block.getMaterial() != Material.AIR && !block.getBlock().hasTileEntity(block) && !blockAbove.getMaterial().blocksMovement()) {
-                    Cm_Falling_Block_Entity fallingBlockEntity = new Cm_Falling_Block_Entity(world, hitX + 0.5D, hitY + 0.5D, hitZ + 0.5D, block,10);
+                    Cm_Falling_Block_Entity fallingBlockEntity = new Cm_Falling_Block_Entity(world, hitX + 0.5D, hitY + 1.0D, hitZ + 0.5D, block,10);
                     fallingBlockEntity.addVelocity(0, 0.2D + getRNG().nextGaussian() * 0.15D, 0);
                     world.addEntity(fallingBlockEntity);
 
@@ -1638,7 +1638,7 @@ public class Ignis_Entity extends Boss_monster {
             BlockState block = world.getBlockState(pos);
             BlockState blockAbove = world.getBlockState(abovePos);
             if (block.getMaterial() != Material.AIR && !block.getBlock().hasTileEntity(block) && !blockAbove.getMaterial().blocksMovement() && !BlockTags.getCollection().get(ModTag.NETHERITE_MONSTROSITY_IMMUNE).contains(block.getBlock())) {
-                Cm_Falling_Block_Entity fallingBlockEntity = new Cm_Falling_Block_Entity(world, hitX + 0.5D, hitY + 0.5D, hitZ + 0.5D, block,10);
+                Cm_Falling_Block_Entity fallingBlockEntity = new Cm_Falling_Block_Entity(world, hitX + 0.5D, hitY + 1.0D, hitZ + 0.5D, block,10);
                 fallingBlockEntity.addVelocity(0, 0.2D + getRNG().nextGaussian() * 0.15D, 0);
                 world.addEntity(fallingBlockEntity);
 
@@ -1862,17 +1862,6 @@ public class Ignis_Entity extends Boss_monster {
         return false;
     }
 
-    public void travel(Vector3d travelVector) {
-        if (this.getAnimation() != NO_ANIMATION) {
-            if (this.getNavigator().getPath() != null) {
-                this.getNavigator().clearPath();
-            }
-            travelVector = Vector3d.ZERO;
-            super.travel(travelVector);
-            return;
-        }
-        super.travel(travelVector);
-    }
 
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
         return ModSounds.IGNIS_HURT.get();
@@ -2029,7 +2018,7 @@ public class Ignis_Entity extends Boss_monster {
 
         public Hornzontal_SwingGoal(Ignis_Entity entity, Animation animation, int look1, int look2, int charge, int bodycheck) {
             super(entity, animation);
-            //this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
+            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
             this.look1 = look1;
             this.look2 = look2;
             this.charge = charge;
@@ -2071,7 +2060,7 @@ public class Ignis_Entity extends Boss_monster {
 
         public Hornzontal_Small_SwingGoal(Ignis_Entity entity, int look1, int look2 ,int look3, int follow_through_tick) {
             super(entity);
-            //this.setMutexFlags(EnumSet.of(Flag.MOVE, Flag.JUMP, Flag.LOOK));
+            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
             this.look1 = look1;
             this.look2 = look2;
             this.look3 = look3;
@@ -2099,7 +2088,7 @@ public class Ignis_Entity extends Boss_monster {
                 if (Ignis_Entity.this.getAnimationTick() == 14) {
                     if(target != null) {
                         if (Ignis_Entity.this.getDistance(target) > 3.5F) {
-                            Ignis_Entity.this.addVelocity(f1 * 1.5, 0, f2 * 1.5);
+                            Ignis_Entity.this.addVelocity(f1 * 2.0, 0, f2 * 2.0);
                         }
                     }else{
                         Ignis_Entity.this.addVelocity(f1 * 1.5, 0, f2 * 1.5);
@@ -2150,7 +2139,7 @@ public class Ignis_Entity extends Boss_monster {
 
         public Body_Check_Attack(Ignis_Entity entity) {
             super(entity);
-            //this.setMutexFlags(EnumSet.of(Flag.MOVE, Flag.JUMP, Flag.LOOK));
+            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
 
         }
 
@@ -2207,7 +2196,7 @@ public class Ignis_Entity extends Boss_monster {
 
         public PokeGoal(Ignis_Entity entity, Animation animation, int look1, int look2, int charge, int bodycheck, int motion1, int motion2) {
             super(entity, animation);
-           // this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
+            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
             this.look1 = look1;
             this.look2 = look2;
             this.charge = charge;
@@ -2250,7 +2239,7 @@ public class Ignis_Entity extends Boss_monster {
 
         public Poked(Ignis_Entity entity, Animation animation) {
             super(entity, animation);
-            //this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
+            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
         }
 
         public void tick() {
@@ -2266,7 +2255,7 @@ public class Ignis_Entity extends Boss_monster {
 
         public Shield_Smash(Ignis_Entity entity, Animation animation) {
             super(entity, animation);
-           // this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
+            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
         }
 
         public void tick() {
@@ -2290,7 +2279,7 @@ public class Ignis_Entity extends Boss_monster {
 
         public Air_Smash(Ignis_Entity entity, Animation animation) {
             super(entity, animation);
-            //this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
+            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
         }
 
         public void tick() {
@@ -2317,7 +2306,7 @@ public class Ignis_Entity extends Boss_monster {
 
         public Reinforced_Air_Smash(Ignis_Entity entity) {
             super(entity);
-            //this.setMutexFlags(EnumSet.of(Flag.MOVE, Flag.JUMP, Flag.LOOK));
+            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
         }
 
         @Override
@@ -2376,7 +2365,7 @@ public class Ignis_Entity extends Boss_monster {
 
         public Swing_Attack_Goal(Ignis_Entity entity, Animation animation, int look1, int follow_through_tick) {
             super(entity, animation);
-           // this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
+            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
             this.look1 = look1;
             this.follow_through_tick = follow_through_tick;
 
@@ -2404,7 +2393,7 @@ public class Ignis_Entity extends Boss_monster {
 
         public Earth_Shudders(Ignis_Entity entity, Animation animation) {
             super(entity, animation);
-            //this.setMutexFlags(EnumSet.of(Flag.MOVE, Flag.JUMP, Flag.LOOK));
+            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
         }
 
         public void tick() {

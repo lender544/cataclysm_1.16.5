@@ -13,17 +13,9 @@ public class SimpleAnimationGoal<T extends Boss_monster & IAnimatedEntity> exten
     public SimpleAnimationGoal(T entity, Animation animation) {
         super(entity);
         this.animation = animation;
-    }
-    public SimpleAnimationGoal(T entity, Animation animation, boolean interruptsAI) {
-        super(entity, interruptsAI);
-        this.animation = animation;
+        this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
     }
 
-    public SimpleAnimationGoal(T entity, Animation animation, EnumSet<Flag> interruptFlagTypes) {
-        super(entity);
-        this.animation = animation;
-        setMutexFlags(interruptFlagTypes);
-    }
 
     @Override
     protected boolean test(Animation animation) {

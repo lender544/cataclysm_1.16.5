@@ -853,7 +853,7 @@ public class Ender_Guardian_Entity extends Boss_monster {
 
         public PunchAttackGoal(Ender_Guardian_Entity entity) {
             super(entity);
-            //this.setFlags(EnumSet.of(Flag.JUMP, Flag.LOOK));
+            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
         }
 
         @Override
@@ -906,7 +906,7 @@ public class Ender_Guardian_Entity extends Boss_monster {
 
         public StompAttackGoal(Ender_Guardian_Entity entity) {
             super(entity);
-            //this.setFlags(EnumSet.of(Flag.JUMP, Flag.LOOK));
+            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
         }
 
         @Override
@@ -944,6 +944,7 @@ public class Ender_Guardian_Entity extends Boss_monster {
 
         public UppercutAndBulletGoal(Ender_Guardian_Entity entity, Animation animation) {
             super(entity, animation);
+            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
         }
 
         public void tick() {
@@ -973,6 +974,7 @@ public class Ender_Guardian_Entity extends Boss_monster {
 
         public RageUppercut(Ender_Guardian_Entity entity, Animation animation) {
             super(entity, animation);
+            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
         }
 
         public void tick() {

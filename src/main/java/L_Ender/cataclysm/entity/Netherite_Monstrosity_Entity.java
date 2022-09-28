@@ -624,7 +624,7 @@ public class Netherite_Monstrosity_Entity extends Boss_monster {
 
         public EarthQuakeGoal(Netherite_Monstrosity_Entity entity) {
             super(entity);
-            //this.setFlags(EnumSet.of(Flag.JUMP, Flag.LOOK));
+            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
         }
 
         @Override
@@ -679,6 +679,7 @@ public class Netherite_Monstrosity_Entity extends Boss_monster {
 
         public ShootGoal(Netherite_Monstrosity_Entity entity, Animation animation) {
             super(entity, animation);
+            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
         }
 
 
@@ -728,6 +729,7 @@ public class Netherite_Monstrosity_Entity extends Boss_monster {
 
         public HealGoal(Netherite_Monstrosity_Entity entity, Animation animation) {
             super(entity, animation);
+            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
         }
 
         @Override
