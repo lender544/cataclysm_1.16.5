@@ -9,7 +9,6 @@ import L_Ender.cataclysm.entity.etc.CMPathNavigateGround;
 import L_Ender.cataclysm.entity.etc.SmartBodyHelper2;
 import L_Ender.cataclysm.entity.projectile.Ignis_Abyss_Fireball_Entity;
 import L_Ender.cataclysm.entity.projectile.Ignis_Fireball_Entity;
-import L_Ender.cataclysm.entity.projectile.Void_Rune_Entity;
 import L_Ender.cataclysm.init.ModEffect;
 import L_Ender.cataclysm.init.ModParticle;
 import L_Ender.cataclysm.init.ModSounds;
@@ -19,18 +18,18 @@ import com.github.alexthe666.citadel.animation.AnimationHandler;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.BodyController;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -53,7 +52,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.*;
+import net.minecraft.world.BossInfo;
+import net.minecraft.world.Explosion;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerBossInfo;
 import net.minecraftforge.event.ForgeEventFactory;
 
@@ -93,7 +94,8 @@ public class Ignis_Entity extends Boss_monster {
     public static final Animation IGNIS_DEATH = Animation.create(124);
     public static final Animation COUNTER = Animation.create(61);
     public static final Animation STRIKE = Animation.create(62);
-    public static final Animation FOUR_COMBO = Animation.create(141);
+    public static final Animation COMBO1 = Animation.create(102);
+    public static final Animation COMBO2 = Animation.create(131);
     public static final Animation BREAK_THE_SHIELD = Animation.create(87);
     public static final Animation SWING_UPPERCUT = Animation.create(65);
     public static final Animation SWING_UPPERSLASH = Animation.create(54);
@@ -107,18 +109,18 @@ public class Ignis_Entity extends Boss_monster {
     public static final Animation REINFORCED_SMASH_SOUL = Animation.create(115);
     public static final Animation SHIELD_BREAK_COUNTER = Animation.create(53);
     public static final Animation SHIELD_BREAK_STRIKE = Animation.create(64);
-    public static final Animation VERTICAL_COMBO = Animation.create(51);
     public static final Animation ULTIMATE_ATTACK = Animation.create(114);
     public static final int AIR_SMASH_COOLDOWN = 240;
     public static final int BODY_CHECK_COOLDOWN = 200;
     public static final int POKE_COOLDOWN = 240;
     public static final int CONTER_STRIKE_COOLDOWN = 360;
     public static final int EARTH_SHUDDERS_COOLDOWN = 800;
+    public static final int SWORD_DANCE_COOLDOWN = 600;
     public static final int HORIZONTAL_SMALL_SWING_COOLDOWN = 100;
     public static final int HORIZONTAL_SWING_COOLDOWN = 160;
     public static final int MAGIC_COOLDOWN = 300;
     public static final int REINFORCED_SMASH_COOLDOWN = 1800;
-    public static final int ULTIMATE_COOLDOWN = 3600;
+    public static final int ULTIMATE_COOLDOWN = 1200;
     private static final DataParameter<Boolean> IS_BLOCKING = EntityDataManager.createKey(Ignis_Entity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> IS_SHIELD_BREAK = EntityDataManager.createKey(Ignis_Entity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> IS_SHIELD = EntityDataManager.createKey(Ignis_Entity.class, DataSerializers.BOOLEAN);
@@ -136,6 +138,7 @@ public class Ignis_Entity extends Boss_monster {
     private int horizontal_swing_cooldown = 0;
     private int magic_cooldown = 0;
     private int earth_shudders_cooldown = 0;
+    private int sword_dance_cooldown = 0;
     private int reinforced_smash_cooldown = 1800;
     private int ultimate_cooldown = 0;
     private boolean Combo = false;
@@ -194,7 +197,8 @@ public class Ignis_Entity extends Boss_monster {
                 STRIKE,
                 SMASH_IN_AIR,
                 BREAK_THE_SHIELD,
-                FOUR_COMBO,
+                COMBO1,
+                COMBO2,
                 EARTH_SHUDDERS_ATTACK,
                 HORIZONTAL_SMALL_SWING_ATTACK,
                 HORIZONTAL_SMALL_SWING_ALT_ATTACK2,
@@ -204,7 +208,6 @@ public class Ignis_Entity extends Boss_monster {
                 REINFORCED_SMASH_SOUL,
                 SHIELD_BREAK_COUNTER,
                 SHIELD_BREAK_STRIKE,
-                VERTICAL_COMBO,
                 ULTIMATE_ATTACK,
                 IGNIS_DEATH};
     }
@@ -213,14 +216,16 @@ public class Ignis_Entity extends Boss_monster {
         this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.goalSelector.addGoal(1, new Hornzontal_SwingGoal(this, HORIZONTAL_SWING_ATTACK, 31, 51, 20, 36));
         this.goalSelector.addGoal(1, new Hornzontal_SwingGoal(this, HORIZONTAL_SWING_ATTACK_SOUL, 27, 47, 16, 31));
         this.goalSelector.addGoal(1, new PokeGoal(this, POKE_ATTACK, 39, 59, 34, 41, 34, 40));
         this.goalSelector.addGoal(1, new PokeGoal(this, POKE_ATTACK2, 33, 53, 28, 35, 28, 34));
         this.goalSelector.addGoal(1, new PokeGoal(this, POKE_ATTACK3, 29, 49, 24, 31, 24, 30));
+        this.goalSelector.addGoal(1, new Combo1(this, COMBO1));
+        this.goalSelector.addGoal(1, new Combo2(this, COMBO2, 34, 50, 12.0F, 27, 0.3f, 0.3f));
         this.goalSelector.addGoal(1, new AttackAnimationGoal1<>(this, PHASE_3, 34, true));
         this.goalSelector.addGoal(1, new AttackAnimationGoal1<>(this, SWING_UPPERSLASH, 23, true));
         this.goalSelector.addGoal(1, new AttackAnimationGoal1<>(this, BREAK_THE_SHIELD, 35, false));
-        this.goalSelector.addGoal(1, new AttackAnimationGoal1<>(this, VERTICAL_COMBO, 10, true));
         this.goalSelector.addGoal(1, new AttackAnimationGoal1<>(this, MAGIC_ATTACK, 49, true));
         this.goalSelector.addGoal(1, new AttackAnimationGoal1<Ignis_Entity>(this, ULTIMATE_ATTACK, 72, true) {
             @Override
@@ -290,7 +295,7 @@ public class Ignis_Entity extends Boss_monster {
 
         if (source.getImmediateSource() instanceof Ignis_Abyss_Fireball_Entity) {
             if(!(source.getTrueSource() instanceof Ignis_Entity)) {
-                this.playSound(ModSounds.IGNIS_SHIELD_BREAK.get(), 1.0f, 0.8F);
+                this.playSound(ModSounds.IGNIS_ARMOR_BREAK.get(), 1.0F, 0.8F);
                 if (!world.isRemote) {
                     if (this.getShieldDurability() < 3) {
                         this.setShieldDurability(this.getShieldDurability() + 1);
@@ -309,11 +314,11 @@ public class Ignis_Entity extends Boss_monster {
             damage = Math.min(CMConfig.IgnisDamageCap, damage);
         }
 
-        if((this.getBossPhase() == 1 && this.getHealth() <= this.getMaxHealth() * 1/3 || this.getBossPhase() == 0 && this.getHealth() <= this.getMaxHealth() * 2/3) && !source.canHarmInCreative()){
+        if((this.getAnimation() == ULTIMATE_ATTACK ||this.getBossPhase() == 1 && this.getHealth() <= this.getMaxHealth() * 1/3 || this.getBossPhase() == 0 && this.getHealth() <= this.getMaxHealth() * 2/3) && !source.canHarmInCreative()){
             damage *= 0.5;
         }
 
-        if ((this.getAnimation() == ULTIMATE_ATTACK ||this.getAnimation() == PHASE_3 || this.getAnimation() == PHASE_2 || this.getAnimation() == STRIKE) && !source.canHarmInCreative()) {
+        if ((this.getAnimation() == PHASE_3 || this.getAnimation() == PHASE_2 || this.getAnimation() == STRIKE) && !source.canHarmInCreative()) {
             return false;
         }
 
@@ -330,11 +335,6 @@ public class Ignis_Entity extends Boss_monster {
             }
             this.playSound(SoundEvents.ENTITY_BLAZE_HURT, 0.5f, 0.4F + this.getRNG().nextFloat() * 0.1F);
             return false;
-        }
-
-        Ignis_Entity.Crackiness ignis$crackiness = this.getCrackiness();
-        if (this.getBossPhase() > 0 && super.attackEntityFrom(source, damage) && this.getCrackiness() != ignis$crackiness) {
-            this.playSound(ModSounds.IGNIS_ARMOR_BREAK.get(), 1.0F, 0.8F);
         }
 
         return super.attackEntityFrom(source, damage);
@@ -647,6 +647,7 @@ public class Ignis_Entity extends Boss_monster {
         if (horizontal_swing_cooldown > 0) horizontal_swing_cooldown--;
         if (magic_cooldown > 0) magic_cooldown--;
         if (reinforced_smash_cooldown > 0) reinforced_smash_cooldown--;
+        if (sword_dance_cooldown > 0) sword_dance_cooldown--;
         if (ultimate_cooldown > 0) ultimate_cooldown--;
         repelEntities(1.4F, 4, 1.4F, 1.4F);
 
@@ -688,6 +689,9 @@ public class Ignis_Entity extends Boss_monster {
                 } else if ((blockingProgress == 10 || swordProgress == 10) && !isAIDisabled() && this.getAnimation() == NO_ANIMATION && this.getDistance(target) < 4.25F && this.getRNG().nextFloat() * 100.0F < 8f) {
                     Animation animation3 = this.getBossPhase() > 0 ? SWING_ATTACK_SOUL : SWING_ATTACK;
                     this.setAnimation(animation3);
+                }else if ((blockingProgress == 10 || swordProgress == 10) && !isAIDisabled() && this.getAnimation() == NO_ANIMATION && this.getDistance(target) < 5.25F && this.getRNG().nextFloat() * 100.0F < 5f && this.getIsShieldBreak() && sword_dance_cooldown <= 0 ) {
+                    sword_dance_cooldown = this.getBossPhase() > 1 ? SWORD_DANCE_COOLDOWN : this.getBossPhase() > 0 ? SWORD_DANCE_COOLDOWN + 120 : SWORD_DANCE_COOLDOWN + 240;
+                    this.setAnimation(COMBO1);
                 } else if ((blockingProgress == 10 || swordProgress == 10) && !isAIDisabled() && this.getAnimation() == NO_ANIMATION && this.getDistance(target) < 3F && this.getRNG().nextFloat() * 100.0F < 20f && !this.getIsShieldBreak()) {
                     this.setAnimation(SHIELD_SMASH_ATTACK);
                 } else if ((blockingProgress == 10 || swordProgress == 10) && !isAIDisabled() && this.getAnimation() == NO_ANIMATION && this.getDistance(target) < 5F && this.getRNG().nextFloat() * 100.0F < 0.7f && counter_strike_cooldown <= 0 && !target.isPotionActive(ModEffect.EFFECTSTUN.get()) ) {
@@ -1167,22 +1171,6 @@ public class Ignis_Entity extends Boss_monster {
 
         }
 
-
-        if (this.getAnimation() == FOUR_COMBO) {
-            if (this.getAnimationTick() == 115) {
-                this.playSound(ModSounds.FLAME_BURST.get(), 1.0f, 1F + this.getRNG().nextFloat() * 0.1F);
-                this.playSound(ModSounds.SWORD_STOMP.get(), 1.0f, 0.75F + this.getRNG().nextFloat() * 0.1F);
-                ScreenShake_Entity.ScreenShake(world, this.getPositionVec(), 30, 0.15f, 0, 50);
-                AreaAttack(4f, 4f, 45, 1.2f, 0.1f, 200, 5, brand, 5,false, 0);
-                ShieldSmashparticle(0.5f, 1.0f, -0.15f);
-            }
-
-            if (this.getAnimationTick() > 115 && this.getAnimationTick() < 125) {
-                Sphereparticle(0.5f, 1.0f, 6);
-                Phase_Transition(56, 0.4f, 0.03f, 5, 240);
-            }
-        }
-
         if (this.getAnimation() == MAGIC_ATTACK) {
             if (this.getAnimationTick() == 5) {
                 this.world.playSound(this.getPosX() , this.getPosY(), this.getPosZ(), SoundEvents.ENTITY_EVOKER_PREPARE_SUMMON, this.getSoundCategory(), 5f, 1.4F + this.getRNG().nextFloat() * 0.1F, false);
@@ -1247,7 +1235,8 @@ public class Ignis_Entity extends Boss_monster {
             float f0 = (float) MathHelper.atan2(f1, f2);
             if (this.getAnimationTick() == 74) {
                 LivingEntity target = this.getAttackTarget();
-                AreaAttack(6f, 6f, 45, 1.5f, 0.25f, 300, 5, brand, 7,false, 0);
+                AreaAttack(7f, 7f, 45, 1.5f, 0.25f, 300, 5, brand, 7,false, 0);
+                ScreenShake_Entity.ScreenShake(world, this.getPositionVec(), 30, 0.3f, 0, 20);
                 this.playSound(ModSounds.STRONGSWING.get(), 1.0f, 0.5F);
                 if (target != null) {
                     double d0 = Math.min(target.getPosY(), this.getPosY());
@@ -1287,6 +1276,58 @@ public class Ignis_Entity extends Boss_monster {
                 earthquakesound(10f);
             }
 
+        }
+        if (this.getAnimation() == COMBO1) {
+            if (this.getAnimationTick() == 19) {
+                this.playSound(ModSounds.STRONGSWING.get(), 1.0f, 1F + this.getRNG().nextFloat() * 0.1F);
+                AreaAttack(6.5f, 6, 90, 0.75f, 0.05f, 60, 2, brand, 5, false, 0);
+            }
+            if (this.getAnimationTick() == 38) {
+                this.playSound(ModSounds.STRONGSWING.get(), 1.0f, 1F + this.getRNG().nextFloat() * 0.1F);
+                AreaAttack(6.5f, 6, 120, 0.75f, 0.05f, 60, 2, brand, 5, false, 0);
+            }
+
+            if (this.getAnimationTick() == 61) {
+                this.playSound(ModSounds.STRONGSWING.get(), 1.0f, 1F + this.getRNG().nextFloat() * 0.1F);
+                AreaAttack(6.5f, 6, 70, 0.75f, 0.05f, 60, 2, brand, 5, false, 0);
+            }
+
+            if (this.getAnimationTick() == 76) {
+                this.playSound(ModSounds.STRONGSWING.get(), 1.0f, 0.8F + this.getRNG().nextFloat() * 0.1F);
+                AreaAttack(6.5f, 6, 310, 0.75f, 0.05f, 60, 3, brand, 5, false, 0.3F);
+            }
+        }
+
+        if (this.getAnimation() == COMBO2) {
+            if (this.getAnimationTick() == 32) {
+                BodyCheckAttack(4.5f, 8, 120, 1.0f, 0.03f, 60, 40, 0.8);
+            }
+
+            if (this.getAnimationTick() == 59) {
+                this.playSound(ModSounds.STRONGSWING.get(), 1.0f, 1.25F + this.getRNG().nextFloat() * 0.1F);
+                AreaAttack(5.25f, 6, 120, 0.4f, 0.03f, 0, 2, brand, 3, true, 0);
+            }
+            if (this.getAnimationTick() == 74) {
+                this.playSound(ModSounds.STRONGSWING.get(), 1.0f, 1.25F + this.getRNG().nextFloat() * 0.1F);
+                AreaAttack(5.25f, 6, 120, 0.4f, 0.03f, 50, 2, brand, 3, true, 0);
+            }
+
+            if (this.getAnimationTick() == 108) {
+                this.playSound(ModSounds.STRONGSWING.get(), 1.0f, 0.8F + this.getRNG().nextFloat() * 0.1F);
+                AreaAttack(5.25f, 6, 225, 1.25f, 0.1f, 150, 5, brand, 7, false, 0);
+            }
+
+            if (this.getAnimationTick() > 108 && this.getAnimationTick() < 112) {
+                StrikeParticle(1.25f, 5, 0);
+            }
+
+            for (int i = 108, j = 3; i <= 116; i = i + 2, j = j + 2) {
+                if (this.getAnimationTick() == i) {
+                    ShieldSmashDamage(1.25f, j, 2.5f, 0, true, 240, 1.1f, 0.12f, 0.1f);
+                    ShieldSmashDamage(1.25f, j + 1, 2.5f, 0, true, 240, 1.1f, 0.12f, 0.1f);
+                    earthquakesound((j + j + 1) / 2);
+                }
+            }
         }
     }
 
@@ -1471,9 +1512,6 @@ public class Ignis_Entity extends Boss_monster {
                     Flameswing();
                 }
             }
-            if (this.getAnimation() == FOUR_COMBO) {
-                Flameswing();
-            }
             if (this.getAnimation() == STRIKE) {
                 if (this.getAnimationTick() > 28 && this.getAnimationTick() < 33) {
                     Flameswing();
@@ -1509,13 +1547,24 @@ public class Ignis_Entity extends Boss_monster {
                     Flameswing();
                 }
             }
-            if (this.getAnimation() == VERTICAL_COMBO) {
-                if (this.getAnimationTick() > 7 && this.getAnimationTick() < 32) {
+
+            if (this.getAnimation() == ULTIMATE_ATTACK) {
+                if (this.getAnimationTick() > 71 && this.getAnimationTick() < 74) {
                     Flameswing();
                 }
             }
-            if (this.getAnimation() == ULTIMATE_ATTACK) {
-                if (this.getAnimationTick() > 71 && this.getAnimationTick() < 74) {
+            if (this.getAnimation() == COMBO1) {
+                if (this.getAnimationTick() > 16 && this.getAnimationTick() < 21
+                        || this.getAnimationTick() > 36 && this.getAnimationTick() < 40
+                        || this.getAnimationTick() > 60 && this.getAnimationTick() < 78) {
+                    Flameswing();
+                }
+            }
+
+            if (this.getAnimation() == COMBO2) {
+                if (this.getAnimationTick() > 59 && this.getAnimationTick() < 62
+                        || this.getAnimationTick() > 74 && this.getAnimationTick() < 77
+                        || this.getAnimationTick() > 107 && this.getAnimationTick() < 114) {
                     Flameswing();
                 }
             }
@@ -2018,11 +2067,11 @@ public class Ignis_Entity extends Boss_monster {
 
         public Hornzontal_SwingGoal(Ignis_Entity entity, Animation animation, int look1, int look2, int charge, int bodycheck) {
             super(entity, animation);
-            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
             this.look1 = look1;
             this.look2 = look2;
             this.charge = charge;
             this.bodycheck = bodycheck;
+            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
 
         }
 
@@ -2060,11 +2109,11 @@ public class Ignis_Entity extends Boss_monster {
 
         public Hornzontal_Small_SwingGoal(Ignis_Entity entity, int look1, int look2 ,int look3, int follow_through_tick) {
             super(entity);
-            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
             this.look1 = look1;
             this.look2 = look2;
             this.look3 = look3;
             this.follow_through_tick = follow_through_tick;
+            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
 
         }
 
@@ -2196,13 +2245,13 @@ public class Ignis_Entity extends Boss_monster {
 
         public PokeGoal(Ignis_Entity entity, Animation animation, int look1, int look2, int charge, int bodycheck, int motion1, int motion2) {
             super(entity, animation);
-            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
             this.look1 = look1;
             this.look2 = look2;
             this.charge = charge;
             this.bodycheck = bodycheck;
             this.motion1 = motion1;
             this.motion2 = motion2;
+            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
         }
 
         public void tick() {
@@ -2365,9 +2414,9 @@ public class Ignis_Entity extends Boss_monster {
 
         public Swing_Attack_Goal(Ignis_Entity entity, Animation animation, int look1, int follow_through_tick) {
             super(entity, animation);
-            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
             this.look1 = look1;
             this.follow_through_tick = follow_through_tick;
+            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE));
 
         }
         public void tick() {
@@ -2407,6 +2456,116 @@ public class Ignis_Entity extends Boss_monster {
                 Ignis_Entity.this.rotationYaw = Ignis_Entity.this.prevRotationYaw;
             }
         }
+    }
+
+
+    class Combo1 extends SimpleAnimationGoal<Ignis_Entity> {
+
+        public Combo1(Ignis_Entity entity, Animation animation) {
+            super(entity, animation);
+            this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.JUMP, Goal.Flag.LOOK));
+        }
+
+        public void tick() {
+            float f1 = (float) Math.cos(Math.toRadians(Ignis_Entity.this.rotationYaw + 90));
+            float f2 = (float) Math.sin(Math.toRadians(Ignis_Entity.this.rotationYaw + 90));
+            LivingEntity target = Ignis_Entity.this.getAttackTarget();
+            if (Ignis_Entity.this.getAnimationTick() < 20 && target != null
+                    || Ignis_Entity.this.getAnimationTick() < 62 && Ignis_Entity.this.getAnimationTick() > 44 && target != null) {
+                Ignis_Entity.this.getLookController().setLookPositionWithEntity(target, 30.0F, 30.0F);
+            } else {
+                Ignis_Entity.this.rotationYaw = Ignis_Entity.this.prevRotationYaw;
+            }
+            if (Ignis_Entity.this.getAnimationTick() == 15 || Ignis_Entity.this.getAnimationTick() == 36 || Ignis_Entity.this.getAnimationTick() == 71) {
+                if (target != null) {
+                    float r = Ignis_Entity.this.getDistance(target);
+                    r = MathHelper.clamp(r, 0, 5);
+                    Ignis_Entity.this.addVelocity(f1 * 0.35 * r, 0, f2 * 0.35 * r);
+                } else {
+                    Ignis_Entity.this.addVelocity(f1, 0, f2);
+                }
+
+            }
+
+            if (Ignis_Entity.this.getAnimationTick() == 84 && target != null) {
+                AnimationHandler.INSTANCE.sendAnimationMessage(Ignis_Entity.this, COMBO2);
+            }
+        }
+
+    }
+
+
+    class Combo2 extends SimpleAnimationGoal<Ignis_Entity> {
+        private final int look1;
+        private final int look2;
+
+        private final float sensing;
+        private final int charge;
+        private final float motionx;
+        private final float motionz;
+
+        public double prevX;
+        public double prevZ;
+        private int newX;
+        private int newZ;
+
+        public Combo2(Ignis_Entity entity, Animation animation, int look1, int look2, float sensing, int charge, float motionx, float motionz) {
+            super(entity, animation);
+            this.look1 = look1;
+            this.look2 = look2;
+            this.sensing = sensing;
+            this.charge = charge;
+            this.motionx = motionx;
+            this.motionz = motionz;
+            this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.JUMP, Goal.Flag.LOOK));
+        }
+
+        @Override
+        public void startExecuting() {
+            super.startExecuting();
+            LivingEntity target = Ignis_Entity.this.getAttackTarget();
+            if (target != null) {
+                prevX = target.getPosX();
+                prevZ = target.getPosZ();
+            }
+        }
+
+        public void tick() {
+            LivingEntity target = Ignis_Entity.this.getAttackTarget();
+            if (Ignis_Entity.this.getAnimationTick() < look1 && target != null
+                    || Ignis_Entity.this.getAnimationTick() < 59 && Ignis_Entity.this.getAnimationTick() > 43 && target != null
+                    || Ignis_Entity.this.getAnimationTick() < 74 && Ignis_Entity.this.getAnimationTick() > 61 && target != null) {
+                Ignis_Entity.this.getLookController().setLookPositionWithEntity(target, 30.0F, 30.0F);
+            } else {
+                Ignis_Entity.this.rotationYaw = Ignis_Entity.this.prevRotationYaw;
+            }
+            if (Ignis_Entity.this.getAnimationTick() == (charge - 1) && target != null) {
+                double x = target.getPosX();
+                double z = target.getPosZ();
+                double vx = (x - prevX) / charge;
+                double vz = (z - prevZ) / charge;
+                newX = MathHelper.floor(x + vx * sensing);
+                newZ = MathHelper.floor(z + vz * sensing);
+            }
+
+            if (Ignis_Entity.this.getAnimationTick() == charge && target != null) {
+                Ignis_Entity.this.setMotion((newX - Ignis_Entity.this.getPosX()) * motionx, 0, (newZ - Ignis_Entity.this.getPosZ()) * motionz);
+
+            }
+
+            float f1 = (float) Math.cos(Math.toRadians(Ignis_Entity.this.rotationYaw + 90));
+            float f2 = (float) Math.sin(Math.toRadians(Ignis_Entity.this.rotationYaw + 90));
+            if (Ignis_Entity.this.getAnimationTick() == 55 || Ignis_Entity.this.getAnimationTick() == 70) {
+                if (target != null) {
+                    if (Ignis_Entity.this.getDistance(target) > 3.5F) {
+                        Ignis_Entity.this.addVelocity(f1 * 1.5, 0, f2 * 1.5);
+                    }
+                } else {
+                    Ignis_Entity.this.addVelocity(f1 * 1.5, 0, f2 * 1.5);
+                }
+            }
+        }
+
     }
 
 }
