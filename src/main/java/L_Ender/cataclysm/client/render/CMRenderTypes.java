@@ -34,5 +34,16 @@ public class CMRenderTypes extends RenderType {
                 .overlay(OVERLAY_ENABLED)
                 .build(false));
     }
+    public static RenderType getGlowingEffect(ResourceLocation locationIn) {
+        RenderType.State rendertype$state = RenderType.State.getBuilder().texture(new RenderState.TextureState(locationIn, false, false))
+                .transparency(RenderState.TRANSLUCENT_TRANSPARENCY)
+                .diffuseLighting(DIFFUSE_LIGHTING_DISABLED)
+                .alpha(DEFAULT_ALPHA)
+                .cull(CULL_DISABLED)
+                .lightmap(LIGHTMAP_DISABLED)
+                .overlay(OVERLAY_DISABLED)
+                .build(true);
+        return makeType("glow_effect", DefaultVertexFormats.ENTITY, 7, 256, true, true, rendertype$state);
+    }
 
 }

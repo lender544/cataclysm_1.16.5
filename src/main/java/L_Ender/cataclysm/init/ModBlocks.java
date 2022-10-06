@@ -1,11 +1,8 @@
 package L_Ender.cataclysm.init;
 
 
+import L_Ender.cataclysm.blocks.*;
 import L_Ender.cataclysm.cataclysm;
-import L_Ender.cataclysm.blocks.BlockEnderGuardianSpawner;
-import L_Ender.cataclysm.blocks.EndStoneTeleportTrapBricks;
-import L_Ender.cataclysm.blocks.ObsidianExplosionTrapBricks;
-import L_Ender.cataclysm.blocks.PurpurVoidRuneTrapBlock;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
@@ -123,6 +120,14 @@ public class ModBlocks {
                     .notSolid()
                     .sound(SoundType.METAL)));
 
+    public static final RegistryObject<Block> ALTAR_OF_FIRE = BLOCKS.register("altar_of_fire",
+            () -> new BlockAltarOfFire(AbstractBlock.Properties.create(Material.ROCK)
+                    .notSolid()
+                    .setLightLevel((block) -> 7)
+                    .hardnessAndResistance(-1.0F, 3600000.0F)
+                    .noDrops()
+                    .sound(SoundType.METAL)));
+
     public static final RegistryObject<Block> CHORUS_PLANKS = BLOCKS.register("chorus_planks",
             () -> new Block(AbstractBlock.Properties.create(Material.NETHER_WOOD, MaterialColor.PURPLE).
                     hardnessAndResistance(2.0F, 3.0F)
@@ -136,6 +141,7 @@ public class ModBlocks {
     
     public static final RegistryObject<Block> CHORUS_FENCE = BLOCKS.register("chorus_fence",
             () -> new FenceBlock(AbstractBlock.Properties.from(CHORUS_PLANKS.get())));
+
 
 
     private static boolean isntSolid(BlockState state, IBlockReader reader, BlockPos pos) {

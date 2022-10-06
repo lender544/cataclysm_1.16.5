@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "cataclysm:items/altar_of_fire"
+  }
+}

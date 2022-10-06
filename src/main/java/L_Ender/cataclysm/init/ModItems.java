@@ -93,6 +93,9 @@ public class ModItems {
     public static final RegistryObject<BlockItem> ENDER_GUARDIAN_SPAWNER = ITEMS.register("ender_guardian_spawner",
             () -> new BlockItem(ModBlocks.ENDER_GUARDIAN_SPAWNER.get(), new Item.Properties().group(cataclysm.CATACLYSM_GROUP)));
 
+    public static final RegistryObject<BlockItem> ALTAR_OF_FIRE = ITEMS.register("altar_of_fire",
+            () -> new BlockItem(ModBlocks.ALTAR_OF_FIRE.get(), new Item.Properties().group(cataclysm.CATACLYSM_GROUP)));
+
     public static final RegistryObject<Item> WITHERITE_INGOT = ITEMS.register("witherite_ingot",
             () -> new Item(new Item.Properties().group(cataclysm.CATACLYSM_GROUP).isImmuneToFire().rarity(Rarity.EPIC)));
 
@@ -135,8 +138,6 @@ public class ModItems {
     public static final RegistryObject<Item> VOID_CORE = ITEMS.register("void_core",
             () -> new void_core(new Item.Properties().maxStackSize(1).group(cataclysm.CATACLYSM_GROUP).isImmuneToFire().isImmuneToFire().rarity(Rarity.EPIC)));
 
-    //public static final RegistryObject<Item> GOLDEN_CUTLASS = ITEMS.register("golden_cutlass",
-    //        () -> new cutlass(ItemTier.GOLD, new Item.Properties().group(cataclysm.CATACLYSM_GROUP)));
 
 
     public static final RegistryObject<Item> IGNITIUM_HELMET = ITEMS.register("ignitium_helmet",

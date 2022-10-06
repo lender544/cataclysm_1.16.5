@@ -1,6 +1,7 @@
 package L_Ender.cataclysm.init;
 
 import L_Ender.cataclysm.cataclysm;
+import L_Ender.cataclysm.tileentities.TileEntityAltarOfFire;
 import L_Ender.cataclysm.tileentities.TileEntityEnderGuardianSpawner;
 import L_Ender.cataclysm.tileentities.TileEntityObsidianExplosionTrapBricks;
 import net.minecraft.tileentity.TileEntityType;
@@ -19,5 +20,9 @@ public class ModTileentites {
 
     public static final RegistryObject<TileEntityType<TileEntityEnderGuardianSpawner>> ENDER_GUARDIAN_SPAWNER = TILE_ENTITY_TYPES.register("ender_guardian_spawner", () ->
             TileEntityType.Builder.create(TileEntityEnderGuardianSpawner::new, ModBlocks.ENDER_GUARDIAN_SPAWNER.get()).build(null));
+
+
+    public static final RegistryObject<TileEntityType<TileEntityAltarOfFire>> ALTAR_OF_FIRE = TILE_ENTITY_TYPES.register("altar_of_fire", () ->
+            TileEntityType.Builder.create(TileEntityAltarOfFire::new, ModBlocks.ALTAR_OF_FIRE.get()).build(null));
 
 }

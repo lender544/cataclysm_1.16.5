@@ -5,6 +5,7 @@ import L_Ender.cataclysm.client.model.armor.ModelIgnitium_Armor;
 import L_Ender.cataclysm.client.model.armor.ModelMonstrousHelm;
 import L_Ender.cataclysm.client.particle.SoulLavaParticle;
 import L_Ender.cataclysm.client.render.CMItemstackRenderer;
+import L_Ender.cataclysm.client.render.blockentity.RendererAltar_of_Fire;
 import L_Ender.cataclysm.client.render.entity.*;
 import L_Ender.cataclysm.client.sound.SoundEnderGuardianMusic;
 import L_Ender.cataclysm.client.sound.SoundMonstrosityMusic;
@@ -14,6 +15,7 @@ import L_Ender.cataclysm.entity.Netherite_Monstrosity_Entity;
 import L_Ender.cataclysm.init.ModEntities;
 import L_Ender.cataclysm.init.ModItems;
 import L_Ender.cataclysm.init.ModParticle;
+import L_Ender.cataclysm.init.ModTileentites;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
@@ -30,6 +32,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 
@@ -77,6 +80,8 @@ public class ClientProxy extends CommonProxy {
             cataclysm.LOGGER.warn("Could not load item models for weapons");
 
         }
+
+        ClientRegistry.bindTileEntityRenderer(ModTileentites.ALTAR_OF_FIRE.get(), manager -> new RendererAltar_of_Fire(manager));
     }
 
 
