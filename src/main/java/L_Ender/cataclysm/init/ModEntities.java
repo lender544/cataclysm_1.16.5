@@ -57,7 +57,7 @@ public class ModEntities {
             .build(cataclysm.MODID + ":nameless_sorcerer"));
 
     public static final RegistryObject<EntityType<Ignis_Entity>> IGNIS = ENTITY_TYPE.register("ignis", () -> EntityType.Builder.create(Ignis_Entity::new, EntityClassification.MONSTER)
-            .size(2.5F, 3.5F)
+            .size(2.25F, 3.5F)
             .immuneToFire()
             .trackingRange(16)
             .setShouldReceiveVelocityUpdates(true)

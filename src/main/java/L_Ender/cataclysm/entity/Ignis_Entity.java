@@ -16,6 +16,7 @@ import L_Ender.cataclysm.init.ModTag;
 import com.github.alexthe666.citadel.animation.Animation;
 import com.github.alexthe666.citadel.animation.AnimationHandler;
 import com.google.common.collect.ImmutableList;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -43,6 +44,7 @@ import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundEvent;
@@ -1630,11 +1632,22 @@ public class Ignis_Entity extends Boss_monster {
                 BlockPos pos = new BlockPos(hitX, hitY, hitZ);
                 BlockPos abovePos = new BlockPos(pos).up();
                 BlockState block = world.getBlockState(pos);
+                Block block2 = block.getBlock();
                 BlockState blockAbove = world.getBlockState(abovePos);
                 if (block.getMaterial() != Material.AIR && !block.getBlock().hasTileEntity(block) && !blockAbove.getMaterial().blocksMovement()) {
                     Cm_Falling_Block_Entity fallingBlockEntity = new Cm_Falling_Block_Entity(world, hitX + 0.5D, hitY + 1.0D, hitZ + 0.5D, block,10);
                     fallingBlockEntity.addVelocity(0, 0.2D + getRNG().nextGaussian() * 0.15D, 0);
                     world.addEntity(fallingBlockEntity);
+                    ITag<Block> Tag = BlockTags.getCollection().get(ModTag.ENDER_GUARDIAN_CAN_DESTROY);
+                    if (!this.world.isRemote && Tag.contains(block2)) {
+                        if (CMConfig.IgnisBlockBreaking) {
+                            this.world.destroyBlock(pos, false, this);
+                        } else {
+                            if (ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
+                                this.world.destroyBlock(pos, false, this);
+                            }
+                        }
+                    }
 
                 }
                 AxisAlignedBB selection = new AxisAlignedBB(px - 0.5, minY, pz - 0.5, px + 0.5, maxY, pz + 0.5);
@@ -1678,19 +1691,26 @@ public class Ignis_Entity extends Boss_monster {
         double extraZ = distance * MathHelper.cos(angle);
         double px = this.getPosX() + extraX + f * math;
         double pz = this.getPosZ() + extraZ + f1 * math;
-
-        if (ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
-            int hitX = MathHelper.floor(px);
-            int hitZ = MathHelper.floor(pz);
-            BlockPos pos = new BlockPos(hitX, hitY, hitZ);
-            BlockPos abovePos = new BlockPos(pos).up();
-            BlockState block = world.getBlockState(pos);
-            BlockState blockAbove = world.getBlockState(abovePos);
-            if (block.getMaterial() != Material.AIR && !block.getBlock().hasTileEntity(block) && !blockAbove.getMaterial().blocksMovement() && !BlockTags.getCollection().get(ModTag.NETHERITE_MONSTROSITY_IMMUNE).contains(block.getBlock())) {
-                Cm_Falling_Block_Entity fallingBlockEntity = new Cm_Falling_Block_Entity(world, hitX + 0.5D, hitY + 1.0D, hitZ + 0.5D, block,10);
-                fallingBlockEntity.addVelocity(0, 0.2D + getRNG().nextGaussian() * 0.15D, 0);
-                world.addEntity(fallingBlockEntity);
-
+        int hitX = MathHelper.floor(px);
+        int hitZ = MathHelper.floor(pz);
+        BlockPos pos = new BlockPos(hitX, hitY, hitZ);
+        BlockPos abovePos = new BlockPos(pos).up();
+        BlockState block = world.getBlockState(pos);
+        Block block2 = block.getBlock();
+        BlockState blockAbove = world.getBlockState(abovePos);
+        if (block.getMaterial() != Material.AIR && !block.getBlock().hasTileEntity(block) && !blockAbove.getMaterial().blocksMovement() && !BlockTags.getCollection().get(ModTag.NETHERITE_MONSTROSITY_IMMUNE).contains(block.getBlock())) {
+            Cm_Falling_Block_Entity fallingBlockEntity = new Cm_Falling_Block_Entity(world, hitX + 0.5D, hitY + 1.0D, hitZ + 0.5D, block,10);
+            fallingBlockEntity.addVelocity(0, 0.2D + getRNG().nextGaussian() * 0.15D, 0);
+            world.addEntity(fallingBlockEntity);
+            ITag<Block> Tag = BlockTags.getCollection().get(ModTag.ENDER_GUARDIAN_CAN_DESTROY);
+            if (!this.world.isRemote && Tag.contains(block2)) {
+                if (CMConfig.IgnisBlockBreaking) {
+                    this.world.destroyBlock(pos, false, this);
+                } else {
+                    if (ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
+                        this.world.destroyBlock(pos, false, this);
+                    }
+                }
             }
         }
             AxisAlignedBB selection = new AxisAlignedBB(px - 0.5, minY, pz - 0.5, px + 0.5, maxY, pz + 0.5);

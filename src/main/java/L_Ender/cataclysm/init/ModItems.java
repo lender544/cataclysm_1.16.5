@@ -158,6 +158,9 @@ public class ModItems {
     public static final RegistryObject<Item> MONSTROUS_HELM = ITEMS.register("monstrous_helm",
             () -> new Monstrous_Helm(ArmorMaterial.NETHERITE, EquipmentSlotType.HEAD, new Item.Properties().group(cataclysm.CATACLYSM_GROUP).isImmuneToFire().rarity(Rarity.EPIC)));
 
+    public static final RegistryObject<Item> BURNING_ASHES = ITEMS.register("burning_ashes",
+            () -> new Item(new Item.Properties().group(cataclysm.CATACLYSM_GROUP).isImmuneToFire()));
+
     public static final RegistryObject<Item> MUSIC_DISC_NETHERITE_MONSTROSITY = ITEMS.register("music_disc_netherite_monstrosity",
             () -> new MusicDiscItem(14, ModSounds.MONSTROSITY_MUSIC,new Item.Properties().group(cataclysm.CATACLYSM_GROUP).maxStackSize(1).rarity(Rarity.EPIC).isImmuneToFire()));
 

@@ -23,11 +23,10 @@ public class CMItemstackRenderer extends ItemStackTileEntityRenderer {
     private static final ModelBulwark_of_the_flame BULWARK_OF_THE_FLAME_MODEL = new ModelBulwark_of_the_flame();
     private static final ModelGauntlet_of_Guard GAUNTLET_OF_GUARD_MODEL = new ModelGauntlet_of_Guard();
     private static final ModelIncinerator THE_INCINERATOR_MODEL = new ModelIncinerator();
-    private static final Model_Altar_of_Fire ALTAR_OF_FIRE_MODEL = new Model_Altar_of_Fire();
     private static final ResourceLocation BULWARK_OF_THE_FLAME_TEXTURE = new ResourceLocation("cataclysm:textures/items/bulwark_of_the_flame.png");
     private static final ResourceLocation GAUNTLET_OF_GUARD_TEXTURE = new ResourceLocation("cataclysm:textures/items/gauntlet_of_guard.png");
     private static final ResourceLocation THE_INCINERATOR_TEXTURE = new ResourceLocation("cataclysm:textures/items/the_incinerator.png");
-    private static final ResourceLocation ALTAR_OF_FIRE_TEXTURE = new ResourceLocation("cataclysm:textures/blocks/altar_of_fire/altar_of_fire.png");
+
     @Override
     public void func_239207_a_(ItemStack itemStackIn, ItemCameraTransforms.TransformType p_239207_2_, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
         if (itemStackIn.getItem() == ModItems.BULWARK_OF_THE_FLAME.get()) {

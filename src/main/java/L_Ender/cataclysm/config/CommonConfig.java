@@ -44,6 +44,7 @@ public class CommonConfig {
 
     public final ForgeConfigSpec.IntValue IgnisDamageCap;
     public final ForgeConfigSpec.DoubleValue IgnisLongRangelimit;
+    public final ForgeConfigSpec.BooleanValue IgnisBlockBreaking;
 
     public CommonConfig(final ForgeConfigSpec.Builder builder) {
         builder.push("Etc");
@@ -88,6 +89,7 @@ public class CommonConfig {
         IgnisDamageMultiplier = buildDouble(builder, "IgnisDamageMultiplier", "all", 1.0D, 0D, 1000000D, "Ignis's Damage Multiplier");
         IgnisLongRangelimit = buildDouble(builder, "Ignis's prevent attacks from far away Range", "all", 20.0D, 1D, 1000000D, "Ignis's Immune to Long distance attack range.");
         IgnisDamageCap = buildInt(builder, "IgnisDamageCap", "all", 20, 0, 1000000, "Ignis's DamageCap");
+        IgnisBlockBreaking = buildBoolean(builder, "IgnisBlockBreaking", "all", true, "Ignis's cracked block breaking ignore the MobGriefing");
         builder.pop();
     }
 

@@ -34,7 +34,7 @@ public class RendererFlame_Strike extends EntityRenderer<Flame_Strike_Entity> {
     public void render(Flame_Strike_Entity flameStrike, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
         matrixStackIn.push();
         float f2 = (float) flameStrike.ticksExisted + partialTicks;
-        IVertexBuilder ivertexbuilder = bufferIn.getBuffer(CMRenderTypes.getBright(this.getEntityTexture(flameStrike)));
+        IVertexBuilder ivertexbuilder = bufferIn.getBuffer(CMRenderTypes.getGlowingEffect(this.getEntityTexture(flameStrike)));
         matrixStackIn.scale(flameStrike.getRadius(), flameStrike.getRadius(), flameStrike.getRadius());
         matrixStackIn.translate(0.0D, 0.001D, 0.0D);
         if(flameStrike.isSoul()) {

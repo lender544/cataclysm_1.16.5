@@ -16,4 +16,8 @@ public class ModTag {
     public static final ResourceLocation ENDERMAPTERA_CAN_NOT_SPAWN = new ResourceLocation("cataclysm", "endermaptera_can_not_spawn");
 
     public static final ResourceLocation IGNIS_CANT_POKE = new ResourceLocation("cataclysm", "ignis_cant_poke");
+
+    public static final ResourceLocation ALTAR_DESTROY_IMMUNE = new ResourceLocation("cataclysm","altar_destroy_immune");
+
+    public static final ResourceLocation IGNIS_CAN_DESTROY = new ResourceLocation("cataclysm","ignis_can_destroy");
 }
