@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix3f;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
@@ -84,9 +85,10 @@ public class RendererAltar_of_Fire<T extends TileEntityAltarOfFire> extends Tile
         matrixStackIn.push();
         if(tileEntityIn.summoningthis) {
             float f2 = (float) tileEntityIn.ticksExisted + delta;
+            float f3 = MathHelper.clamp(tileEntityIn.summoningticks, 0, 25);
             IVertexBuilder ivertexbuilder = bufferIn.getBuffer(CMRenderTypes.getGlowingEffect(FLAME_STRIKE));
-            matrixStackIn.scale(2.5F, 2.5F, 2.5F);
-            matrixStackIn.translate(0.2D, 0.001D, 0.2D);
+            matrixStackIn.scale(f3 * 0.1f, f3 * 0.1f, f3 * 0.1f);
+            matrixStackIn.translate(0.5D, 0.001D, 0.5D);
             matrixStackIn.rotate(Vector3f.YP.rotationDegrees(90.0F + f2));
 
             MatrixStack.Entry lvt_19_1_ = matrixStackIn.getLast();

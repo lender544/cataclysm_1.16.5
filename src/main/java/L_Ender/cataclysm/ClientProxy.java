@@ -3,6 +3,7 @@ package L_Ender.cataclysm;
 import L_Ender.cataclysm.client.event.ClientEvent;
 import L_Ender.cataclysm.client.model.armor.ModelIgnitium_Armor;
 import L_Ender.cataclysm.client.model.armor.ModelMonstrousHelm;
+import L_Ender.cataclysm.client.model.armor.ModelIgnitium_Elytra_Chestplate;
 import L_Ender.cataclysm.client.particle.SoulLavaParticle;
 import L_Ender.cataclysm.client.render.CMItemstackRenderer;
 import L_Ender.cataclysm.client.render.blockentity.RendererAltar_of_Fire;
@@ -48,6 +49,7 @@ public class ClientProxy extends CommonProxy {
 
     private static final ModelMonstrousHelm MONSTROUS_HELM_MODEL = new ModelMonstrousHelm(0.3F);
     private static final ModelIgnitium_Armor IGNITIUM_ARMOR_MODEL = new ModelIgnitium_Armor(0.5F);
+    private static final ModelIgnitium_Elytra_Chestplate IGNITIUM_ELYTRA_CHESTPLATE_MODEL = new ModelIgnitium_Elytra_Chestplate(0.5F);
     private static final ModelIgnitium_Armor IGNITIUM_ARMOR_MODEL_LEGS = new ModelIgnitium_Armor(0.2F);
 
     public static final Map<Integer, SoundEnderGuardianMusic> GUARDIAN_SOUND_MAP = new HashMap<>();
@@ -103,6 +105,8 @@ public class ClientProxy extends CommonProxy {
                 return IGNITIUM_ARMOR_MODEL;
             case 2:
                 return IGNITIUM_ARMOR_MODEL_LEGS;
+            case 3:
+                return IGNITIUM_ELYTRA_CHESTPLATE_MODEL.withAnimations(entity);
         }
         return null;
     }

@@ -6,12 +6,13 @@
   "item.cataclysm.final_fractal.desc": "造成所攻击实体最大生命值3%的额外伤害",
   "item.cataclysm.zweiender.desc": "若攻击目标背部，则造成双倍伤害",
   "item.cataclysm.infernal_forge.desc": "在主手时，若右击方块，则可进行范围攻击",
-  "item.cataclysm.infernal_forge.desc2": "(仅供参考，这其实是一把镐子)",
+  "item.cataclysm.infernal_forge.desc2": "（仅供参考，这其实是一把镐子）",
   "item.cataclysm.gauntlet_of_guard.desc": "在主手时，你可以长按鼠标右键以吸引实体靠近你",
   "item.cataclysm.monstrous_helm.desc": "穿戴时，若你的生命值少于一半, 你将利用爆炸推开附近的怪物",
   "item.cataclysm.monstrous_helm2.desc": "获得强化防御、击退抗性和生命恢复的增益效果。",
   "item.cataclysm.void_core.desc": "右键方块召唤虚空符文",
   "item.cataclysm.wip.desc": "未实现",
+  "you_cant_escape": "你不能逃脱",
 
   "item.cataclysm.enderite_ingot": "末影合金锭",
   "item.cataclysm.ignitium_ingot": "焰魔锭",
@@ -38,6 +39,7 @@
   "item.cataclysm.ender_guardian_spawn_egg": "末影守卫刷怪蛋",
   "item.cataclysm.netherite_monstrosity_spawn_egg": "下界合金巨兽刷怪蛋",
   "item.cataclysm.nameless_sorcerer_spawn_egg": "无名巫师刷怪蛋",
+  "item.cataclysm.ignis_spawn_egg": "焰魔刷怪蛋",
 
   "itemGroup.cataclysmtab": "灾变",
   "block.cataclysm.witherite_block": "凋零合金块",
@@ -65,14 +67,14 @@
   "block.cataclysm.end_stone_teleport_trap_bricks":"末地石陷阱方块",
   "block.cataclysm.obsidian_explosion_trap_bricks":"黑曜石陷阱方块",
   "block.cataclysm.void_lantern_block":"虚空灯",
-  "block.cataclysm.ender_guardian_spawner":"末影守卫刷怪箱",
+  "block.cataclysm.ender_guardian_spawner":"末影守卫刷怪笼",
 
   "entity.cataclysm.ender_golem": "末影傀儡",
   "entity.cataclysm.ender_guardian": "末影守卫",
   "entity.cataclysm.ender_guardian_bullet": "末影守卫炮弹",
   "entity.cataclysm.lava_bomb": "熔岩炸弹",
   "entity.cataclysm.void_rune": "虚空符文",
-  "entity.cataclysm.nameless_sorcerer": "无名巫师(未实现)",
+  "entity.cataclysm.nameless_sorcerer": "无名巫师（未实现）",
   "entity.cataclysm.netherite_monstrosity": "下界合金巨兽",
   "entity.cataclysm.endermaptera": "末影甲虫",
   "entity.cataclysm.void_scatter_arrow": "虚空散射箭",
@@ -81,6 +83,7 @@
 
   "effect.cataclysm.monstrous": "骇人之恶",
   "effect.cataclysm.blazing_brand": "炽热视线",
+  "effect.cataclysm.stun": "眩晕",
 
   "golemhurt.sub": "末影傀儡：受伤",
   "golemdeath.sub": "末影傀儡：死亡",

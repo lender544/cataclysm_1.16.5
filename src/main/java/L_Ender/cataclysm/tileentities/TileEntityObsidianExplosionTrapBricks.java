@@ -30,9 +30,9 @@ public class TileEntityObsidianExplosionTrapBricks extends TileEntity implements
         }
         if(LIT){
             ticksExisted++;
-            float x = this.getPos().getX();
+            float x = this.getPos().getX() + 0.5F;
             float y = this.getPos().getY();
-            float z = this.getPos().getZ();
+            float z = this.getPos().getZ() + 0.5F;
             float f = 5F;
             if (ticksExisted < 80) {
                 for (LivingEntity inRange : world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB((double) x - f, (double) y - f, (double) z - f, (double) x + f, (double) y + f, (double) z + f))) {

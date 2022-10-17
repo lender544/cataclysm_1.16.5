@@ -19,6 +19,7 @@
   "item.cataclysm.chain_of_soul_binding": "Chain of Soul Binding",
   "item.cataclysm.ignitium_helmet": "Ignitium Helmet",
   "item.cataclysm.ignitium_chestplate": "Ignitium ChestPlate",
+  "item.cataclysm.ignitium_elytra_chestplate": "Ignitium Elytra ChestPlate",
   "item.cataclysm.ignitium_leggings": "Ignitium Leggings",
   "item.cataclysm.ignitium_boots": "Ignitium Boots",
   "item.cataclysm.bulwark_of_the_flame": "Bulwark Of the Flame",
@@ -30,6 +31,7 @@
   "item.cataclysm.monstrous_horn": "Monstrous Horn",
   "item.cataclysm.void_jaw": "Void Jaw",
   "item.cataclysm.void_core": "Void Core",
+  "item.cataclysm.burning_ashes": "Burning Ashes",
   "item.cataclysm.music_disc_netherite_monstrosity": "Music Disc",
   "item.cataclysm.music_disc_ender_guardian": "Music Disc",
   "item.cataclysm.music_disc_netherite_monstrosity.desc": "Cinematic Danger Background Music | No Copyright",
@@ -70,6 +72,7 @@
   "block.cataclysm.obsidian_explosion_trap_bricks":"Obsidian Trap Block",
   "block.cataclysm.void_lantern_block":"Void Lantern Block",
   "block.cataclysm.ender_guardian_spawner":"Ender Guardian Spawner",
+  "block.cataclysm.altar_of_fire":"Altar Of Fire",
 
   "entity.cataclysm.ender_golem": "Ender Golem",
   "entity.cataclysm.ender_guardian": "Ender Guardian",

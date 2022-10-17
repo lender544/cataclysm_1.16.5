@@ -7,8 +7,10 @@ import L_Ender.cataclysm.event.ServerEventHandler;
 import L_Ender.cataclysm.init.*;
 //import L_Ender.cataclysm.init.ModStructures;
 import L_Ender.cataclysm.message.MessageCMMultipart;
+import L_Ender.cataclysm.message.MessageUpdateblockentity;
 import L_Ender.cataclysm.util.Cataclysm_Group;
 import L_Ender.cataclysm.util.Modcompat;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
@@ -25,8 +27,10 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -92,6 +96,17 @@ public class cataclysm {
         PROXY.clientInit();
     }
 
+    public static <MSG> void sendMSGToAll(MSG message) {
+        for (ServerPlayerEntity player : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
+            sendNonLocal(message, player);
+        }
+    }
+
+    public static <MSG> void sendNonLocal(MSG msg, ServerPlayerEntity player) {
+        if (player.server.isDedicatedServer() || !player.getName().equals(player.server.getServerOwner())) {
+            NETWORK_WRAPPER.sendTo(msg, player.connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+        }
+    }
 
     public void setup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
@@ -100,6 +115,7 @@ public class cataclysm {
             Modcompat.registerDispenserBehaviors();
         });
         NETWORK_WRAPPER.registerMessage(packetsRegistered++, MessageCMMultipart.class, MessageCMMultipart::encode, MessageCMMultipart::new, MessageCMMultipart.Handler::onMessage);
+        NETWORK_WRAPPER.registerMessage(packetsRegistered++, MessageUpdateblockentity.class, MessageUpdateblockentity::write, MessageUpdateblockentity::read, MessageUpdateblockentity.Handler::handle);
     }
 
     public void onBiomeLoading(BiomeLoadingEvent event) {

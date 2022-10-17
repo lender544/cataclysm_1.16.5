@@ -138,13 +138,14 @@ public class ModItems {
     public static final RegistryObject<Item> VOID_CORE = ITEMS.register("void_core",
             () -> new void_core(new Item.Properties().maxStackSize(1).group(cataclysm.CATACLYSM_GROUP).isImmuneToFire().isImmuneToFire().rarity(Rarity.EPIC)));
 
-
-
     public static final RegistryObject<Item> IGNITIUM_HELMET = ITEMS.register("ignitium_helmet",
             () -> new Ignitium_Armor(Armortier.IGNITIUM, EquipmentSlotType.HEAD, new Item.Properties().group(cataclysm.CATACLYSM_GROUP).isImmuneToFire().rarity(Rarity.EPIC)));
 
     public static final RegistryObject<Item> IGNITIUM_CHESTPLATE = ITEMS.register("ignitium_chestplate",
             () -> new Ignitium_Armor(Armortier.IGNITIUM, EquipmentSlotType.CHEST, new Item.Properties().group(cataclysm.CATACLYSM_GROUP).isImmuneToFire().rarity(Rarity.EPIC)));
+
+    public static final RegistryObject<Item> IGNITIUM_ELYTRA_CHESTPLATE = ITEMS.register("ignitium_elytra_chestplate",
+            () -> new Ignitium_Elytra_Chestplate(new Item.Properties().group(cataclysm.CATACLYSM_GROUP).isImmuneToFire().rarity(Rarity.EPIC), Armortier.IGNITIUM));
 
     public static final RegistryObject<Item> IGNITIUM_LEGGINGS = ITEMS.register("ignitium_leggings",
             () -> new Ignitium_Armor(Armortier.IGNITIUM, EquipmentSlotType.LEGS, new Item.Properties().group(cataclysm.CATACLYSM_GROUP).isImmuneToFire().rarity(Rarity.EPIC)));
