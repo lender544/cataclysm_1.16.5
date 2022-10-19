@@ -9,9 +9,11 @@ import L_Ender.cataclysm.client.render.CMItemstackRenderer;
 import L_Ender.cataclysm.client.render.blockentity.RendererAltar_of_Fire;
 import L_Ender.cataclysm.client.render.entity.*;
 import L_Ender.cataclysm.client.sound.SoundEnderGuardianMusic;
+import L_Ender.cataclysm.client.sound.SoundIgnisMusic;
 import L_Ender.cataclysm.client.sound.SoundMonstrosityMusic;
 import L_Ender.cataclysm.config.CMConfig;
 import L_Ender.cataclysm.entity.Ender_Guardian_Entity;
+import L_Ender.cataclysm.entity.Ignis_Entity;
 import L_Ender.cataclysm.entity.Netherite_Monstrosity_Entity;
 import L_Ender.cataclysm.init.ModEntities;
 import L_Ender.cataclysm.init.ModItems;
@@ -46,13 +48,13 @@ import java.util.concurrent.Callable;
 public class ClientProxy extends CommonProxy {
 
     public static final Map<Integer, SoundMonstrosityMusic> MONSTROSITY_SOUND_MAP = new HashMap<>();
-
+    public static final Map<Integer, SoundEnderGuardianMusic> GUARDIAN_SOUND_MAP = new HashMap<>();
+    public static final Map<Integer, SoundIgnisMusic> IGNIS_SOUND_MAP = new HashMap<>();
     private static final ModelMonstrousHelm MONSTROUS_HELM_MODEL = new ModelMonstrousHelm(0.3F);
     private static final ModelIgnitium_Armor IGNITIUM_ARMOR_MODEL = new ModelIgnitium_Armor(0.5F);
     private static final ModelIgnitium_Elytra_Chestplate IGNITIUM_ELYTRA_CHESTPLATE_MODEL = new ModelIgnitium_Elytra_Chestplate(0.5F);
     private static final ModelIgnitium_Armor IGNITIUM_ARMOR_MODEL_LEGS = new ModelIgnitium_Armor(0.2F);
 
-    public static final Map<Integer, SoundEnderGuardianMusic> GUARDIAN_SOUND_MAP = new HashMap<>();
 
     public void clientInit() {
         ItemRenderer itemRendererIn = Minecraft.getInstance().getItemRenderer();
@@ -74,6 +76,7 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ASHEN_BREATH.get(), RendererNull::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.IGNIS_FIREBALL.get(), RendererIgnis_Fireball::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.IGNIS_ABYSS_FIREBALL.get(), RendererIgnis_Abyss_Fireball::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.BLAZING_BONE.get(), RendererBlazing_Bone::new);
         MinecraftForge.EVENT_BUS.register(new ClientEvent());
         try {
             ItemModelsProperties.registerProperty(ModItems.BULWARK_OF_THE_FLAME.get(), new ResourceLocation("blocking"), (stack, p_239421_1_, p_239421_2_) -> p_239421_2_ != null && p_239421_2_.isHandActive() && p_239421_2_.getActiveItemStack() == stack ? 1.0F : 0.0F);
@@ -148,6 +151,23 @@ public class ClientProxy extends CommonProxy {
                         GUARDIAN_SOUND_MAP.put(entity.getEntityId(), sound);
                     } else {
                         sound = GUARDIAN_SOUND_MAP.get(entity.getEntityId());
+                    }
+                    if (!Minecraft.getInstance().getSoundHandler().isPlaying(sound) && sound.isNearest()) {
+                        Minecraft.getInstance().getSoundHandler().play(sound);
+                    }
+                }
+            }
+            if (entity instanceof Ignis_Entity && entity.isAlive() && updateKind == 67) {
+                float f2 = Minecraft.getInstance().gameSettings.getSoundLevel(SoundCategory.RECORDS);
+                if (f2 <= 0) {
+                    IGNIS_SOUND_MAP.clear();
+                } else {
+                    SoundIgnisMusic sound;
+                    if (IGNIS_SOUND_MAP.get(entity.getEntityId()) == null) {
+                        sound = new SoundIgnisMusic((Ignis_Entity) entity);
+                        IGNIS_SOUND_MAP.put(entity.getEntityId(), sound);
+                    } else {
+                        sound = IGNIS_SOUND_MAP.get(entity.getEntityId());
                     }
                     if (!Minecraft.getInstance().getSoundHandler().isPlaying(sound) && sound.isNearest()) {
                         Minecraft.getInstance().getSoundHandler().play(sound);

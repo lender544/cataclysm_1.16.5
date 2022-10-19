@@ -1,5 +1,6 @@
 package L_Ender.cataclysm.entity;
 
+import L_Ender.cataclysm.cataclysm;
 import L_Ender.cataclysm.config.CMConfig;
 import L_Ender.cataclysm.entity.AI.*;
 import L_Ender.cataclysm.entity.effect.Cm_Falling_Block_Entity;
@@ -58,6 +59,8 @@ import net.minecraft.world.BossInfo;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerBossInfo;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
@@ -519,6 +522,10 @@ public class Ignis_Entity extends Boss_monster {
         }
         if (!this.getIsSword() && swordProgress > 0F) {
             swordProgress--;
+        }
+
+        if (!this.isSilent() && !world.isRemote) {
+            this.world.setEntityState(this, (byte) 67);
         }
 
         if (!this.getPassengers().isEmpty() && this.getPassengers().get(0).isSneaking()) {
@@ -2594,6 +2601,14 @@ public class Ignis_Entity extends Boss_monster {
             }
         }
 
+    }
+    @OnlyIn(Dist.CLIENT)
+    public void handleStatusUpdate(byte id) {
+        if (id == 67) {
+            cataclysm.PROXY.onEntityStatus(this, id);
+        } else {
+            super.handleStatusUpdate(id);
+        }
     }
 
 }

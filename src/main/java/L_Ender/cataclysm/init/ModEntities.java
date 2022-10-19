@@ -96,6 +96,12 @@ public class ModEntities {
             .trackingRange(4)
             .build(cataclysm.MODID + ":void_shard"));
 
+    public static final RegistryObject<EntityType<Blazing_Bone_Entity>> BLAZING_BONE = ENTITY_TYPE.register("blazing_bone", () -> EntityType.Builder.<Blazing_Bone_Entity>create(Blazing_Bone_Entity::new, EntityClassification.MISC)
+            .size(0.5f, 0.5f)
+            .updateInterval(20)
+            .setTrackingRange(4)
+            .build(cataclysm.MODID + ":blazing_bone"));
+
     public static final RegistryObject<EntityType<ScreenShake_Entity>> SCREEN_SHAKE = ENTITY_TYPE.register("screen_shake", () -> EntityType.Builder.<ScreenShake_Entity>create(ScreenShake_Entity::new, EntityClassification.MISC)
             .disableSummoning()
             .size(1.0f, 1.0f)

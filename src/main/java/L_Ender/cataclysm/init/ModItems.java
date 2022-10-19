@@ -22,7 +22,6 @@ public class ModItems {
     public static final RegistryObject<BlockItem> IGNITIUM_BLOCK = ITEMS.register("ignitium_block",
             () -> new BlockItem(ModBlocks.IGNITIUM_BLOCK.get(), new Item.Properties().group(cataclysm.CATACLYSM_GROUP).isImmuneToFire().rarity(Rarity.EPIC)));
 
-
     public static final RegistryObject<BlockItem> POLISHED_END_STONE = ITEMS.register("polished_end_stone",
             () -> new BlockItem(ModBlocks.POLISHED_END_STONE.get(), new Item.Properties().group(cataclysm.CATACLYSM_GROUP)));
 
@@ -129,6 +128,9 @@ public class ModItems {
     public static final RegistryObject<Item> VOID_SCATTER_ARROW = ITEMS.register("void_scatter_arrow",
             () -> new ModItemArrow(new Item.Properties().group(cataclysm.CATACLYSM_GROUP).isImmuneToFire()));
 
+    public static final RegistryObject<Item> BLAZING_BONE = ITEMS.register("blazing_bone",
+            () -> new Item(new Item.Properties().isImmuneToFire()));
+
     public static final RegistryObject<Item> VOID_SHARD = ITEMS.register("void_shard",
             () -> new Item(new Item.Properties().isImmuneToFire()));
 
@@ -168,6 +170,8 @@ public class ModItems {
     public static final RegistryObject<Item> MUSIC_DISC_ENDER_GUARDIAN = ITEMS.register("music_disc_ender_guardian",
             () -> new MusicDiscItem(14, ModSounds.ENDERGUARDIAN_MUSIC,new Item.Properties().group(cataclysm.CATACLYSM_GROUP).maxStackSize(1).rarity(Rarity.EPIC).isImmuneToFire()));
 
+    public static final RegistryObject<Item> MUSIC_DISC_IGNIS = ITEMS.register("music_disc_ignis",
+            () -> new MusicDiscItem(14, ModSounds.IGNIS_MUSIC,new Item.Properties().group(cataclysm.CATACLYSM_GROUP).maxStackSize(1).rarity(Rarity.EPIC).isImmuneToFire()));
 
     public static final RegistryObject<SpawnEggItem> ENDER_GOLEM_SPAWN_EGG = ITEMS.register("ender_golem_spawn_egg",
             () -> new Modspawnegg(ModEntities.ENDER_GOLEM, 0x2a1a42, 0xa153fe, new Item.Properties().group(cataclysm.CATACLYSM_GROUP)));

@@ -119,10 +119,10 @@ public class Ashen_Breath_Entity extends Entity {
                         boolean flag = entityHit.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, caster), 4);
                         if (flag) {
                             //entityHit.setDeltaMovement(entityHit.getDeltaMovement().multiply(0.25, 1, 0.25));
-                            EffectInstance effectinstance = new EffectInstance(Effects.BLINDNESS, 100, 0, false, false, true);
-                            EffectInstance effectinstance1 = new EffectInstance(Effects.NAUSEA, 100, 0, false, false, true);
-                           // entityHit.addPotionEffect(effectinstance);
-                          //  entityHit.addPotionEffect(effectinstance1);
+                            EffectInstance effectinstance = new EffectInstance(Effects.BLINDNESS, 60, 0, false, false, true);
+                            EffectInstance effectinstance1 = new EffectInstance(Effects.NAUSEA, 120, 0, false, false, true);
+                            entityHit.addPotionEffect(effectinstance);
+                            entityHit.addPotionEffect(effectinstance1);
                         }
                     }
                 }
