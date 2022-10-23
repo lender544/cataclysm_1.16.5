@@ -142,7 +142,11 @@ public class ModBlocks {
     public static final RegistryObject<Block> CHORUS_FENCE = BLOCKS.register("chorus_fence",
             () -> new FenceBlock(AbstractBlock.Properties.from(CHORUS_PLANKS.get())));
 
-
+    public static final RegistryObject<Block> MOLTING_NETHERRACK = BLOCKS.register("molting_netherrack",
+            () -> new MoltingNetherrack(AbstractBlock.Properties.create(Material.ROCK, MaterialColor.NETHERRACK).tickRandomly()
+                    .setLightLevel((state) -> {
+                        return 3;
+                    })));
 
     private static boolean isntSolid(BlockState state, IBlockReader reader, BlockPos pos) {
         return false;

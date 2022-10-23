@@ -348,13 +348,6 @@ public class Ignis_Entity extends Boss_monster {
     private boolean canBlockDamageSource(DamageSource damageSourceIn) {
         Entity entity = damageSourceIn.getImmediateSource();
         boolean flag = false;
-        if (entity instanceof AbstractArrowEntity) {
-            AbstractArrowEntity abstractarrowentity = (AbstractArrowEntity)entity;
-            if (abstractarrowentity.getPierceLevel() > 0) {
-                flag = true;
-            }
-        }
-
         if (entity instanceof Ignis_Abyss_Fireball_Entity) {
             if(!(damageSourceIn.getTrueSource() instanceof Ignis_Entity)) {
                 flag = true;
@@ -1645,7 +1638,7 @@ public class Ignis_Entity extends Boss_monster {
                     Cm_Falling_Block_Entity fallingBlockEntity = new Cm_Falling_Block_Entity(world, hitX + 0.5D, hitY + 1.0D, hitZ + 0.5D, block,10);
                     fallingBlockEntity.addVelocity(0, 0.2D + getRNG().nextGaussian() * 0.15D, 0);
                     world.addEntity(fallingBlockEntity);
-                    ITag<Block> Tag = BlockTags.getCollection().get(ModTag.ENDER_GUARDIAN_CAN_DESTROY);
+                    ITag<Block> Tag = BlockTags.getCollection().get(ModTag.IGNIS_CAN_DESTROY);
                     if (!this.world.isRemote && Tag.contains(block2)) {
                         if (CMConfig.IgnisBlockBreaking) {
                             this.world.destroyBlock(pos, false, this);
@@ -1709,7 +1702,7 @@ public class Ignis_Entity extends Boss_monster {
             Cm_Falling_Block_Entity fallingBlockEntity = new Cm_Falling_Block_Entity(world, hitX + 0.5D, hitY + 1.0D, hitZ + 0.5D, block,10);
             fallingBlockEntity.addVelocity(0, 0.2D + getRNG().nextGaussian() * 0.15D, 0);
             world.addEntity(fallingBlockEntity);
-            ITag<Block> Tag = BlockTags.getCollection().get(ModTag.ENDER_GUARDIAN_CAN_DESTROY);
+            ITag<Block> Tag = BlockTags.getCollection().get(ModTag.IGNIS_CAN_DESTROY);
             if (!this.world.isRemote && Tag.contains(block2)) {
                 if (CMConfig.IgnisBlockBreaking) {
                     this.world.destroyBlock(pos, false, this);

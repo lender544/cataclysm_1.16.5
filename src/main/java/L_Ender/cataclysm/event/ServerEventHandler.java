@@ -1,11 +1,16 @@
 package L_Ender.cataclysm.event;
 
 import L_Ender.cataclysm.entity.Ignis_Entity;
+import L_Ender.cataclysm.init.ModBlocks;
 import L_Ender.cataclysm.init.ModEffect;
 import L_Ender.cataclysm.init.ModItems;
 import L_Ender.cataclysm.items.final_fractal;
 import L_Ender.cataclysm.items.zweiender;
 import L_Ender.cataclysm.cataclysm;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.FlowingFluidBlock;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -13,11 +18,15 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.monster.piglin.PiglinEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -32,12 +41,36 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = cataclysm.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ServerEventHandler {
 
-    @SubscribeEvent
-    public void onJoinWorld(EntityJoinWorldEvent event) {
-        if (event.getWorld().isRemote) {
-            return;
-        }
 
+    @SubscribeEvent
+    public void onLivingUpdateEvent(LivingEvent.LivingUpdateEvent event) {
+        int p_45022_ = 2;
+        final BlockPos p_45021_ = event.getEntityLiving().getPosition();
+        if (!event.getEntityLiving().getItemStackFromSlot(EquipmentSlotType.FEET).isEmpty() && event.getEntityLiving().getItemStackFromSlot(EquipmentSlotType.FEET).getItem() == ModItems.IGNITIUM_BOOTS.get()) {
+            if (!event.getEntityLiving().isSneaking()) {
+                if (event.getEntityLiving().isOnGround()) {
+                    BlockState blockstate = ModBlocks.MOLTING_NETHERRACK.get().getDefaultState();
+                    float f = (float) Math.min(16, 2 + p_45022_);
+                    BlockPos.Mutable blockpos$mutableblockpos = new BlockPos.Mutable();
+
+                    for (BlockPos blockpos : BlockPos.getAllInBoxMutable(p_45021_.add((double) (-f), -1.0D, (double) (-f)), p_45021_.add((double) f, -1.0D, (double) f))) {
+                        if (blockpos.withinDistance(event.getEntityLiving().getPositionVec(), (double) f)) {
+                            blockpos$mutableblockpos.setPos(blockpos.getX(), blockpos.getY() + 1, blockpos.getZ());
+                            BlockState blockstate1 = event.getEntityLiving().world.getBlockState(blockpos$mutableblockpos);
+                            if (blockstate1.isAir()) {
+                                BlockState blockstate2 = event.getEntityLiving().world.getBlockState(blockpos);
+                                boolean isFull = blockstate2.getBlock() == Blocks.LAVA && blockstate2.get(FlowingFluidBlock.LEVEL) == 0; //TODO: Forge, modded waters?
+                                if (blockstate2.getMaterial() == Material.LAVA && isFull && blockstate.isValidPosition(event.getEntityLiving().world, blockpos) && event.getEntityLiving().world.placedBlockCollides(blockstate, blockpos, ISelectionContext.dummy()) && !net.minecraftforge.event.ForgeEventFactory.onBlockPlace(event.getEntityLiving(), net.minecraftforge.common.util.BlockSnapshot.create(event.getEntityLiving().world.getDimensionKey(), event.getEntityLiving().world, blockpos), net.minecraft.util.Direction.UP)) {
+                                    event.getEntityLiving().world.setBlockState(blockpos, blockstate);
+                                    event.getEntityLiving().world.getPendingBlockTicks().scheduleTick(blockpos, ModBlocks.MOLTING_NETHERRACK.get(), MathHelper.nextInt(event.getEntityLiving().getRNG(), 60, 120));
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @SubscribeEvent
@@ -188,6 +221,31 @@ public class ServerEventHandler {
         LivingEntity entity = event.getEntityLiving();
         if (entity.getHealth() <= event.getAmount() && entity.isPotionActive(ModEffect.EFFECTSTUN.get())) {
             entity.removeActivePotionEffect(ModEffect.EFFECTSTUN.get());
+        }
+        if (!event.getEntityLiving().getItemStackFromSlot(EquipmentSlotType.LEGS).isEmpty() && event.getSource() != null && event.getSource().getTrueSource() != null){
+            if(event.getEntityLiving().getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() == ModItems.IGNITIUM_LEGGINGS.get()){
+                Entity attacker = event.getSource().getTrueSource();
+                if (attacker instanceof LivingEntity) {
+                    if (event.getEntityLiving().getRNG().nextFloat() < 0.5F) {
+                        EffectInstance effectinstance1 = ((LivingEntity) attacker).getActivePotionEffect(ModEffect.EFFECTBLAZING_BRAND.get());
+                        int i = 1;
+                        if (effectinstance1 != null) {
+                            i += effectinstance1.getAmplifier();
+                            ((LivingEntity) attacker).removeActivePotionEffect(ModEffect.EFFECTBLAZING_BRAND.get());
+                        } else {
+                            --i;
+                        }
+
+                        i = MathHelper.clamp(i, 0, 2);
+                        EffectInstance effectinstance = new EffectInstance(ModEffect.EFFECTBLAZING_BRAND.get(), 100, i, false, false, true);
+                        ((LivingEntity) attacker).addPotionEffect(effectinstance);
+
+                        if (!attacker.isBurning()) {
+                            attacker.setFire(5);
+                        }
+                    }
+                }
+            }
         }
     }
 

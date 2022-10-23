@@ -22,6 +22,7 @@ import net.minecraft.entity.ai.controller.BodyController;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.BlazeEntity;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.monster.ShulkerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -106,7 +107,7 @@ public class Ignited_Revenant_Entity extends Boss_monster {
     @Override
     public boolean attackEntityFrom(DamageSource source, float damage) {
         Entity entity = source.getImmediateSource();
-        if (damage > 0.0F && this.canBlockDamageSource(source) && this.getIsAnger() && !EntityTypeTags.getCollection().get(ModTag.TRAP_BLOCK_NOT_DETECTED).contains(entity.getType())) {
+        if (damage > 0.0F && this.canBlockDamageSource(source)) {
             this.damageShield(damage);
             if (!source.isProjectile()) {
                 if (entity instanceof LivingEntity) {
@@ -128,10 +129,29 @@ public class Ignited_Revenant_Entity extends Boss_monster {
                 flag = true;
             }
         }
-        if (!damageSourceIn.isUnblockable()) {
-            flag = true;
+        if (!damageSourceIn.isUnblockable() && !flag && this.getIsAnger()) {
+            Vector3d vector3d2 = damageSourceIn.getDamageLocation();
+            if (vector3d2 != null) {
+                Vector3d vector3d = this.getLook(1.0F);
+                Vector3d vector3d1 = vector3d2.subtractReverse(this.getPositionVec()).normalize();
+                vector3d1 = new Vector3d(vector3d1.x, 0.0D, vector3d1.z);
+                return vector3d1.dotProduct(vector3d) < 0.0D;
+            }
         }
-        return flag;
+
+        return false;
+    }
+
+    public boolean isOnSameTeam(Entity entityIn) {
+        if (entityIn == this) {
+            return true;
+        } else if (super.isOnSameTeam(entityIn)) {
+            return true;
+        } else if (entityIn instanceof Ignited_Revenant_Entity) {
+            return this.getTeam() == null && entityIn.getTeam() == null;
+        } else {
+            return false;
+        }
     }
 
     @Override

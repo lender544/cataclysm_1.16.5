@@ -20,4 +20,5 @@ public class ModTag {
     public static final ResourceLocation ALTAR_DESTROY_IMMUNE = new ResourceLocation("cataclysm","altar_destroy_immune");
 
     public static final ResourceLocation IGNIS_CAN_DESTROY = new ResourceLocation("cataclysm","ignis_can_destroy");
+
 }
