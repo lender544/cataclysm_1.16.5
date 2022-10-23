@@ -64,6 +64,7 @@ public class TileEntityAltarOfFire extends LockableTileEntity implements ITickab
                 if(summoningticks > 121) {
                     this.setInventorySlotContents(0, ItemStack.EMPTY);
                     BlockBreaking(3, 3, 3);
+                    BasaltBreaking(16,8,16);
                     Ignis_Entity ignis = ModEntities.IGNIS.get().create(world);
                     ignis.setPosition(this.getPos().getX() + 0.5F, this.getPos().getY() + 3, this.getPos().getZ() + 0.5F);
                     if(!world.isRemote){
@@ -86,7 +87,7 @@ public class TileEntityAltarOfFire extends LockableTileEntity implements ITickab
         int MthZ = MathHelper.floor(this.getPos().getZ() + 0.5F);
         for (int k2 = -x; k2 <= x; ++k2) {
                 for (int l2 = -z; l2 <= z; ++l2) {
-                    for (int j = -1; j <= y; ++j) {
+                    for (int j = 0; j <= y; ++j) {
                         int i3 = MthX + k2;
                         int k = MthY + j;
                         int l = MthZ + l2;
@@ -96,6 +97,28 @@ public class TileEntityAltarOfFire extends LockableTileEntity implements ITickab
                         ITag<Block> Tag = BlockTags.getCollection().get(ModTag.ALTAR_DESTROY_IMMUNE);
                         if (block != Blocks.AIR && !Tag.contains(block)) {
                             this.world.destroyBlock(blockpos, false);
+
+                    }
+                }
+            }
+        }
+    }
+
+    private void BasaltBreaking(int x, int y, int z) {
+        int MthX = MathHelper.floor(this.getPos().getX() + 0.5F);
+        int MthY = MathHelper.floor(this.getPos().getY());
+        int MthZ = MathHelper.floor(this.getPos().getZ() + 0.5F);
+        for (int k2 = -x; k2 <= x; ++k2) {
+            for (int l2 = -z; l2 <= z; ++l2) {
+                for (int j = -1; j <= y; ++j) {
+                    int i3 = MthX + k2;
+                    int k = MthY + j;
+                    int l = MthZ + l2;
+                    BlockPos blockpos = new BlockPos(i3, k, l);
+                    BlockState blockstate = this.world.getBlockState(blockpos);
+                    Block block = blockstate.getBlock();
+                    if (block != Blocks.AIR && block == Blocks.BASALT) {
+                        this.world.destroyBlock(blockpos, false);
 
                     }
                 }

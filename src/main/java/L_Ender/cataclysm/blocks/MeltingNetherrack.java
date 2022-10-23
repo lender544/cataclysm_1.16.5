@@ -3,7 +3,6 @@ package L_Ender.cataclysm.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.FrostedIceBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
@@ -15,10 +14,10 @@ import net.minecraft.world.server.ServerWorld;
 
 import java.util.Random;
 
-public class MoltingNetherrack extends Block {
+public class MeltingNetherrack extends Block {
     public static final IntegerProperty AGE = BlockStateProperties.AGE_0_3;
 
-    public MoltingNetherrack(Properties properties) {
+    public MeltingNetherrack(Properties properties) {
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(AGE, Integer.valueOf(0)));
     }

@@ -46,7 +46,7 @@ public class CMConfig {
 
     public static boolean SoulblacksmithSpawn = true;
     public static boolean RuinedcitadelSpawn = true;
-
+    public static boolean BurningArenaSpawn = true;
 
     public static void bake(ModConfig config) {
         try {
@@ -67,6 +67,7 @@ public class CMConfig {
             EndergolemBlockBreaking = ConfigHolder.COMMON.EndergolemBlockBreaking.get();
             SoulblacksmithSpawn = ConfigHolder.COMMON.SoulblacksmithSpawn.get();
             RuinedcitadelSpawn = ConfigHolder.COMMON.RuinedcitadelSpawn.get();
+            BurningArenaSpawn = ConfigHolder.COMMON.BurningArenaSpawn.get();
             MonstrosityHealthMultiplier = ConfigHolder.COMMON.MonstrosityHealthMultiplier.get();
             MonstrosityDamageMultiplier = ConfigHolder.COMMON.MonstrosityDamageMultiplier.get();
             EnderguardianHealthMultiplier = ConfigHolder.COMMON.EnderguardianHealthMultiplier.get();

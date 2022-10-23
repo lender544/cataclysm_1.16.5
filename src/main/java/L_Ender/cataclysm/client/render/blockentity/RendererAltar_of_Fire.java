@@ -50,8 +50,9 @@ public class RendererAltar_of_Fire<T extends TileEntityAltarOfFire> extends Tile
         MODEL.render(matrixStackIn, bufferIn.getBuffer(RenderType.getEntityCutoutNoCull(TEXTURE)), combinedLightIn, combinedOverlayIn, 1, 1F, 1, 1);
         MODEL.render(matrixStackIn, bufferIn.getBuffer(CMRenderTypes.getGlowingEffect(getIdleTexture(tileEntityIn.ticksExisted % 12))), 210, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
         matrixStackIn.pop();
-        renderItem(tileEntityIn, partialTicks,matrixStackIn,bufferIn,combinedLightIn);
         renderSigil(tileEntityIn,partialTicks,matrixStackIn,bufferIn);
+        renderItem(tileEntityIn, partialTicks,matrixStackIn,bufferIn,combinedLightIn);
+
 
     }
     private ResourceLocation getIdleTexture(int age) {
@@ -87,8 +88,8 @@ public class RendererAltar_of_Fire<T extends TileEntityAltarOfFire> extends Tile
             float f2 = (float) tileEntityIn.ticksExisted + delta;
             float f3 = MathHelper.clamp(tileEntityIn.summoningticks, 0, 25);
             IVertexBuilder ivertexbuilder = bufferIn.getBuffer(CMRenderTypes.getGlowingEffect(FLAME_STRIKE));
-            matrixStackIn.scale(f3 * 0.1f, f3 * 0.1f, f3 * 0.1f);
             matrixStackIn.translate(0.5D, 0.001D, 0.5D);
+            matrixStackIn.scale(f3 * 0.1f, f3 * 0.1f, f3 * 0.1f);
             matrixStackIn.rotate(Vector3f.YP.rotationDegrees(90.0F + f2));
 
             MatrixStack.Entry lvt_19_1_ = matrixStackIn.getLast();
@@ -100,7 +101,6 @@ public class RendererAltar_of_Fire<T extends TileEntityAltarOfFire> extends Tile
             this.drawVertex(lvt_20_1_, lvt_21_1_, ivertexbuilder, 1, 0, 1, 1, 1, 1, 0, 1, 240);
             this.drawVertex(lvt_20_1_, lvt_21_1_, ivertexbuilder, 1, 0, -1, 1, 0, 1, 0, 1, 240);
         }
-
         matrixStackIn.pop();
     }
 

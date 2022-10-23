@@ -1,5 +1,6 @@
 package L_Ender.cataclysm.structures;
 
+import L_Ender.cataclysm.init.ModEntities;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import net.minecraft.util.Rotation;
@@ -21,8 +22,8 @@ import net.minecraft.world.gen.settings.StructureSeparationSettings;
 
 import java.util.List;
 
-public class SoulBlackSmithStructure extends Structure<NoFeatureConfig> {
-    public SoulBlackSmithStructure(Codec<NoFeatureConfig> codec) {
+public class BurningArenaStructure extends Structure<NoFeatureConfig> {
+    public BurningArenaStructure(Codec<NoFeatureConfig> codec) {
         super(codec);
     }
 
@@ -32,7 +33,7 @@ public class SoulBlackSmithStructure extends Structure<NoFeatureConfig> {
      */
     @Override
     public IStartFactory<NoFeatureConfig> getStartFactory() {
-        return SoulBlackSmithStructure.Start::new;
+        return BurningArenaStructure.Start::new;
     }
 
 
@@ -72,7 +73,7 @@ public class SoulBlackSmithStructure extends Structure<NoFeatureConfig> {
             {
                 for(int surroundingZ = z - radius; surroundingZ <= z + radius; ++surroundingZ)
                 {
-                    ChunkPos chunkpos = Structure.BASTION_REMNANT.getChunkPosForStructure(structureseparationsettings2, seed, random, surroundingX, surroundingZ);
+                    ChunkPos chunkpos = Structure.FORTRESS.getChunkPosForStructure(structureseparationsettings2, seed, random, surroundingX, surroundingZ);
                     if(surroundingX == chunkpos.x && surroundingZ == chunkpos.z) {
                         return true;
                     }
@@ -94,10 +95,10 @@ public class SoulBlackSmithStructure extends Structure<NoFeatureConfig> {
             int x = (chunkX << 4) + 7;
             int z = (chunkZ << 4) + 7;
 
-            BlockPos blockpos = new BlockPos(x, 27, z);
+            BlockPos blockpos = new BlockPos(x, 21, z);
 
 
-            SoulBlackSmithPieces.start(templateManagerIn, blockpos, rotation, this.components, this.rand);
+            BurningArenaPieces.start(templateManagerIn, blockpos, rotation, this.components, this.rand);
 
             this.recalculateStructureSize();
 

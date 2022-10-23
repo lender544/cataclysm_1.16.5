@@ -49,7 +49,7 @@ public class ServerEventHandler {
         if (!event.getEntityLiving().getItemStackFromSlot(EquipmentSlotType.FEET).isEmpty() && event.getEntityLiving().getItemStackFromSlot(EquipmentSlotType.FEET).getItem() == ModItems.IGNITIUM_BOOTS.get()) {
             if (!event.getEntityLiving().isSneaking()) {
                 if (event.getEntityLiving().isOnGround()) {
-                    BlockState blockstate = ModBlocks.MOLTING_NETHERRACK.get().getDefaultState();
+                    BlockState blockstate = ModBlocks.MELTING_NETHERRACK.get().getDefaultState();
                     float f = (float) Math.min(16, 2 + p_45022_);
                     BlockPos.Mutable blockpos$mutableblockpos = new BlockPos.Mutable();
 
@@ -62,7 +62,7 @@ public class ServerEventHandler {
                                 boolean isFull = blockstate2.getBlock() == Blocks.LAVA && blockstate2.get(FlowingFluidBlock.LEVEL) == 0; //TODO: Forge, modded waters?
                                 if (blockstate2.getMaterial() == Material.LAVA && isFull && blockstate.isValidPosition(event.getEntityLiving().world, blockpos) && event.getEntityLiving().world.placedBlockCollides(blockstate, blockpos, ISelectionContext.dummy()) && !net.minecraftforge.event.ForgeEventFactory.onBlockPlace(event.getEntityLiving(), net.minecraftforge.common.util.BlockSnapshot.create(event.getEntityLiving().world.getDimensionKey(), event.getEntityLiving().world, blockpos), net.minecraft.util.Direction.UP)) {
                                     event.getEntityLiving().world.setBlockState(blockpos, blockstate);
-                                    event.getEntityLiving().world.getPendingBlockTicks().scheduleTick(blockpos, ModBlocks.MOLTING_NETHERRACK.get(), MathHelper.nextInt(event.getEntityLiving().getRNG(), 60, 120));
+                                    event.getEntityLiving().world.getPendingBlockTicks().scheduleTick(blockpos, ModBlocks.MELTING_NETHERRACK.get(), MathHelper.nextInt(event.getEntityLiving().getRNG(), 60, 120));
                                 }
 
                             }

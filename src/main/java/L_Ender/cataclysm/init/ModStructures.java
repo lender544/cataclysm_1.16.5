@@ -1,10 +1,7 @@
 package L_Ender.cataclysm.init;
 
 import L_Ender.cataclysm.cataclysm;
-import L_Ender.cataclysm.structures.RuinedCitadelPieces;
-import L_Ender.cataclysm.structures.RuinedCitadelStructure;
-import L_Ender.cataclysm.structures.SoulBlackSmithPieces;
-import L_Ender.cataclysm.structures.SoulBlackSmithStructure;
+import L_Ender.cataclysm.structures.*;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
@@ -37,9 +34,13 @@ public class ModStructures {
 
     public static final RegistryObject<Structure<NoFeatureConfig>> RUINED_CITADEL = registerStructure("ruined_citadel", () -> (new RuinedCitadelStructure(NoFeatureConfig.CODEC)));
 
+    public static final RegistryObject<Structure<NoFeatureConfig>> BURNING_ARENA = registerStructure("burning_arena", () -> (new BurningArenaStructure(NoFeatureConfig.CODEC)));
+
     public static IStructurePieceType SBSP = IStructurePieceType.register(SoulBlackSmithPieces.Piece::new, cataclysm.MODID + "soul_black_smith");
 
     public static IStructurePieceType RCP = IStructurePieceType.register(RuinedCitadelPieces.Piece::new, cataclysm.MODID + "ruined_citadel");
+
+    public static IStructurePieceType BAP = IStructurePieceType.register(BurningArenaPieces.Piece::new, cataclysm.MODID + "burning_arena");
 
     private static <T extends Structure<?>> RegistryObject<T> registerStructure(String name, Supplier<T> structure) {
         return STRUCTURE_FEATURES.register(name, structure);
@@ -48,16 +49,22 @@ public class ModStructures {
     public static void setupStructures() {
         setupMapSpacingAndLand(
                 SOUL_BLACK_SMITH.get(), /* The instance of the structure */
-                new StructureSeparationSettings(112 /* maximum distance apart in chunks between spawn attempts */,
-                        -1 /* minimum distance apart in chunks between spawn attempts */,
-                        1234567890 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */),
+                new StructureSeparationSettings(90 /* maximum distance apart in chunks between spawn attempts */,
+                        70 /* minimum distance apart in chunks between spawn attempts */,
+                        1984567320 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */),
                 false);
 
         setupMapSpacingAndLand(
                 RUINED_CITADEL.get(), /* The instance of the structure */
                 new StructureSeparationSettings(30 /* maximum distance apart in chunks between spawn attempts */,
                         -1 /* minimum distance apart in chunks between spawn attempts */,
-                        1234567890 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */),
+                        367895146 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */),
+                false);
+        setupMapSpacingAndLand(
+                BURNING_ARENA.get(), /* The instance of the structure */
+                new StructureSeparationSettings(112 /* maximum distance apart in chunks between spawn attempts */,
+                        70 /* minimum distance apart in chunks between spawn attempts */,
+                        1923456789 /* this modifies the seed of the structure so no two structures always spawn over each-other. Make this large and unique. */),
                 false);
     }
 
@@ -114,6 +121,7 @@ public class ModStructures {
             //       already added your default structure spacing to some dimensions. You would need to override the spacing with .put(...)
             tempMap.putIfAbsent(ModStructures.SOUL_BLACK_SMITH.get(), DimensionStructuresSettings.field_236191_b_.get(ModStructures.SOUL_BLACK_SMITH.get()));
             tempMap.putIfAbsent(ModStructures.RUINED_CITADEL.get(), DimensionStructuresSettings.field_236191_b_.get(ModStructures.RUINED_CITADEL.get()));
+            tempMap.putIfAbsent(ModStructures.BURNING_ARENA.get(), DimensionStructuresSettings.field_236191_b_.get(ModStructures.BURNING_ARENA.get()));
             serverWorld.getChunkProvider().generator.func_235957_b_().field_236193_d_ = tempMap;
         }
     }

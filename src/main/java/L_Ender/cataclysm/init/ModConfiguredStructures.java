@@ -17,6 +17,8 @@ public class ModConfiguredStructures {
     public static StructureFeature<?, ?> CONFIGURED_SOUL_BLACK_SMITH = ModStructures.SOUL_BLACK_SMITH.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG);
 
     public static StructureFeature<?, ?> CONFIGURED_RUINED_CITADEL = ModStructures.RUINED_CITADEL.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG);
+
+    public static StructureFeature<?, ?> CONFIGURED_BURNING_ARENA = ModStructures.BURNING_ARENA.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG);
     /**
      * Registers the configured structure which is what gets added to the biomes.
      * Noticed we are not using a forge registry because there is none for configured structures.
@@ -28,6 +30,7 @@ public class ModConfiguredStructures {
         Registry<StructureFeature<?, ?>> registry = WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE;
         Registry.register(registry, new ResourceLocation(cataclysm.MODID, "configured_soul_black_smith"), CONFIGURED_SOUL_BLACK_SMITH);
         Registry.register(registry, new ResourceLocation(cataclysm.MODID, "configured_ruined_citadel"), CONFIGURED_RUINED_CITADEL);
+        Registry.register(registry, new ResourceLocation(cataclysm.MODID, "configured_burning_arena"), CONFIGURED_BURNING_ARENA);
         // Ok so, this part may be hard to grasp but basically, just add your structure to this to
         // prevent any sort of crash or issue with other mod's custom ChunkGenerators. If they use
         // FlatGenerationSettings.STRUCTURES in it and you don't add your structure to it, the game
@@ -42,6 +45,7 @@ public class ModConfiguredStructures {
         // the restart but honestly, superflat is really buggy and shouldn't be your main focus in my opinion.
         FlatGenerationSettings.STRUCTURES.put(ModStructures.SOUL_BLACK_SMITH.get(), CONFIGURED_SOUL_BLACK_SMITH);
         FlatGenerationSettings.STRUCTURES.put(ModStructures.RUINED_CITADEL.get(), CONFIGURED_RUINED_CITADEL);
+        FlatGenerationSettings.STRUCTURES.put(ModStructures.BURNING_ARENA.get(), CONFIGURED_BURNING_ARENA);
     }
 
     public static void onBiomeLoading(BiomeLoadingEvent event) {
@@ -53,6 +57,12 @@ public class ModConfiguredStructures {
         if (CMConfig.SoulblacksmithSpawn && event.getCategory().equals(Biome.Category.NETHER)) {
             if (!(biome == Biomes.BASALT_DELTAS)) {
                 event.getGeneration().getStructures().add(() -> CONFIGURED_SOUL_BLACK_SMITH);
+            }
+        }
+
+        if (CMConfig.BurningArenaSpawn && event.getCategory().equals(Biome.Category.NETHER)) {
+            if (!(biome == Biomes.BASALT_DELTAS)) {
+                event.getGeneration().getStructures().add(() -> CONFIGURED_BURNING_ARENA);
             }
         }
 
