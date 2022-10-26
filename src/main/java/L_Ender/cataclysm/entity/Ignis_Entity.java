@@ -397,6 +397,11 @@ public class Ignis_Entity extends Boss_monster {
     }
 
     public void setIsBlocking(boolean isBlocking) {
+        if (isBlocking) {
+            if (this.getIsSword()) {
+                this.setIsSword(false);
+            }
+        }
         getDataManager().set(IS_BLOCKING, isBlocking);
     }
 
@@ -413,6 +418,11 @@ public class Ignis_Entity extends Boss_monster {
     }
 
     public void setIsSword(boolean isSword) {
+        if (isSword) {
+            if (this.getIsBlocking()) {
+                this.setIsBlocking(false);
+            }
+        }
         getDataManager().set(IS_SWORD, isSword);
     }
 
@@ -546,19 +556,11 @@ public class Ignis_Entity extends Boss_monster {
             if (target != null) {
                 timeWithoutTarget = 0;
                 if (this.getIsShieldBreak()) {
-                    if (!this.getIsSword()) {
-                        this.setIsSword(true);
-                    }
-                    if (this.getIsBlocking()) {
-                        this.setIsBlocking(false);
-                    }
+                    this.setIsSword(true);
                 } else {
-                    if (!this.getIsBlocking()) {
-                        this.setIsBlocking(true);
-                    }
-                    if (this.getIsSword()) {
-                        this.setIsSword(false);
-                    }
+
+                    this.setIsBlocking(true);
+
                 }
             }
 

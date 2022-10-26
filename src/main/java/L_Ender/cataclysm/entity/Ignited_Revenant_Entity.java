@@ -25,6 +25,7 @@ import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.ShulkerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.item.AxeItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -49,6 +50,7 @@ public class Ignited_Revenant_Entity extends Boss_monster {
     public static final int BREATH_COOLDOWN = 200;
     public static final int STORM_COOLDOWN = 200;
     private static final DataParameter<Boolean> ANGER = EntityDataManager.createKey(Ignited_Revenant_Entity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Integer> SHIELD_DURABILITY = EntityDataManager.createKey(Ignited_Revenant_Entity.class, DataSerializers.VARINT);
     private float heightOffset = 0.5F;
     private int heightOffsetUpdateTime;
     public float angerProgress;
@@ -107,6 +109,24 @@ public class Ignited_Revenant_Entity extends Boss_monster {
     @Override
     public boolean attackEntityFrom(DamageSource source, float damage) {
         Entity entity = source.getImmediateSource();
+        if (!this.world.isRemote) {
+            if(this.getIsAnger()) {
+                if (entity instanceof LivingEntity) {
+                    // Shield disabling on critical axe hit
+                    if (((LivingEntity) entity).getHeldItemMainhand().getItem() instanceof AxeItem) {
+                        double itemDamage = ((AxeItem) ((LivingEntity) entity).getHeldItemMainhand().getItem()).getAttackDamage()+ 1;
+                        if (damage >= itemDamage + (itemDamage / 2)) {
+                            if (this.getShieldDurability() < 4) {
+                                this.playSound(SoundEvents.ENTITY_WITHER_BREAK_BLOCK, 1.0F, 1.5F);
+
+                                this.setShieldDurability(this.getShieldDurability() + 1);
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
         if (damage > 0.0F && this.canBlockDamageSource(source)) {
             this.damageShield(damage);
             if (!source.isProjectile()) {
@@ -129,7 +149,7 @@ public class Ignited_Revenant_Entity extends Boss_monster {
                 flag = true;
             }
         }
-        if (!damageSourceIn.isUnblockable() && !flag && this.getIsAnger()) {
+        if (!damageSourceIn.isUnblockable() && !flag && this.getIsAnger() && this.getShieldDurability() < 4) {
             Vector3d vector3d2 = damageSourceIn.getDamageLocation();
             if (vector3d2 != null) {
                 Vector3d vector3d = this.getLook(1.0F);
@@ -158,14 +178,13 @@ public class Ignited_Revenant_Entity extends Boss_monster {
     protected void registerData() {
         super.registerData();
         getDataManager().register(ANGER, false);
-
+        getDataManager().register(SHIELD_DURABILITY, 0);
     }
 
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
 
     }
-
 
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
@@ -177,6 +196,14 @@ public class Ignited_Revenant_Entity extends Boss_monster {
 
     public boolean getIsAnger() {
         return getDataManager().get(ANGER);
+    }
+
+    public void setShieldDurability(int ShieldDurability) {
+        this.getDataManager().set(SHIELD_DURABILITY, ShieldDurability);
+    }
+
+    public int getShieldDurability() {
+        return this.getDataManager().get(SHIELD_DURABILITY);
     }
 
     public void tick() {
@@ -200,11 +227,13 @@ public class Ignited_Revenant_Entity extends Boss_monster {
                 } else if (storm_cooldown <= 0 && this.getDistance(target) < 6 && !isAIDisabled() && this.getAnimation() == NO_ANIMATION && this.rand.nextInt(15) == 0) {
                     storm_cooldown = STORM_COOLDOWN;
                     this.setAnimation(BONE_STORM_ATTACK);
+                }else if (!isAIDisabled() && this.getAnimation() == NO_ANIMATION && (this.rand.nextInt(12) == 0 && this.getDistance(target) < 4.5F) && this.getShieldDurability() > 3) {
+                    this.setAnimation(ASH_BREATH_ATTACK);
                 }
             }
-            if(this.getAnimation() == NO_ANIMATION && this.getIsAnger()){
-                if(this.ticksExisted % 6 == 0){
-                    for (LivingEntity entity : this.world.getEntitiesWithinAABB(LivingEntity.class, this.getBoundingBox().grow(1.5D))) {
+            if(this.getAnimation() == NO_ANIMATION && this.getIsAnger() && this.getShieldDurability() < 4){
+                if(this.ticksExisted % (6 + this.getShieldDurability() * 2) == 0){
+                    for (LivingEntity entity : this.world.getEntitiesWithinAABB(LivingEntity.class, this.getBoundingBox().grow(1.25D))) {
                         if (!isOnSameTeam(entity) && !(entity instanceof Ignited_Revenant_Entity) && entity != this) {
                             boolean flag = entity.attackEntityFrom(DamageSource.causeMobDamage(this), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
                             if (flag) {

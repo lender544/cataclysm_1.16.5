@@ -13,7 +13,7 @@ public class Cataclysm_Group extends ItemGroup {
 
     @Override
     public ItemStack createIcon() {
-        return ModItems.FINAL_FRACTAL.get().getDefaultInstance();
+        return ModItems.THE_INCINERATOR.get().getDefaultInstance();
     }
 
     @Override

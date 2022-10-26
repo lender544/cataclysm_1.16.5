@@ -4,6 +4,7 @@ import L_Ender.cataclysm.init.ModEffect;
 import L_Ender.cataclysm.init.ModEntities;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.*;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
@@ -149,7 +150,8 @@ public class Flame_Strike_Entity extends Entity {
                     this.setRadius(getRadius() - 0.1F);
                 }else{
                     if(!this.isSoul()) {
-                        this.world.createExplosion(this.owner, this.getPosX(), this.getPosY(), this.getPosZ(), 2, Explosion.Mode.NONE);
+                        int explosionradius = this.owner instanceof PlayerEntity ? 1 : 2;
+                        this.world.createExplosion(this.owner, this.getPosX(), this.getPosY(), this.getPosZ(), explosionradius, Explosion.Mode.NONE);
                     }
                     this.remove();
                 }
@@ -204,10 +206,11 @@ public class Flame_Strike_Entity extends Entity {
                         Hitentity.addPotionEffect(effectinstance);
                     }
                 } else {
+                    float hpDmg = (float) (caster instanceof PlayerEntity ? 0.02 : 0.06);
                     if (caster.isOnSameTeam(Hitentity)) {
                         return;
                     }
-                    boolean flag = Hitentity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, caster), damage + Hitentity.getMaxHealth() * 0.06f);
+                    boolean flag = Hitentity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, caster), damage + Hitentity.getMaxHealth() * hpDmg);
                     if (flag) {
                         EffectInstance effectinstance1 = Hitentity.getActivePotionEffect(ModEffect.EFFECTBLAZING_BRAND.get());
                         int i = 1;

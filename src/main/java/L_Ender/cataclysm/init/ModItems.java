@@ -14,10 +14,10 @@ public class ModItems {
             cataclysm.MODID);
 
     public static final RegistryObject<BlockItem> ENDERITE_BLOCK = ITEMS.register("enderite_block",
-            () -> new BlockItem(ModBlocks.ENDERRITE_BLOCK.get(), new Item.Properties().group(cataclysm.CATACLYSM_GROUP).isImmuneToFire().rarity(Rarity.EPIC)));
+            () -> new BlockItem(ModBlocks.ENDERRITE_BLOCK.get(), new Item.Properties().isImmuneToFire().rarity(Rarity.EPIC)));
 
     public static final RegistryObject<BlockItem> WITHERITE_BLCOK = ITEMS.register("witherite_block",
-            () -> new BlockItem(ModBlocks.WITHERITE_BLOCK.get(), new Item.Properties().group(cataclysm.CATACLYSM_GROUP).isImmuneToFire().rarity(Rarity.EPIC)));
+            () -> new BlockItem(ModBlocks.WITHERITE_BLOCK.get(), new Item.Properties().isImmuneToFire().rarity(Rarity.EPIC)));
 
     public static final RegistryObject<BlockItem> IGNITIUM_BLOCK = ITEMS.register("ignitium_block",
             () -> new BlockItem(ModBlocks.IGNITIUM_BLOCK.get(), new Item.Properties().group(cataclysm.CATACLYSM_GROUP).isImmuneToFire().rarity(Rarity.EPIC)));
@@ -96,10 +96,10 @@ public class ModItems {
             () -> new BlockItem(ModBlocks.ALTAR_OF_FIRE.get(), new Item.Properties().group(cataclysm.CATACLYSM_GROUP)));
 
     public static final RegistryObject<Item> WITHERITE_INGOT = ITEMS.register("witherite_ingot",
-            () -> new Item(new Item.Properties().group(cataclysm.CATACLYSM_GROUP).isImmuneToFire().rarity(Rarity.EPIC)));
+            () -> new Item(new Item.Properties().isImmuneToFire().rarity(Rarity.EPIC)));
 
     public static final RegistryObject<Item> ENDERITE_INGOT = ITEMS.register("enderite_ingot",
-            () -> new Item(new Item.Properties().group(cataclysm.CATACLYSM_GROUP).isImmuneToFire().rarity(Rarity.EPIC)));
+            () -> new Item(new Item.Properties().isImmuneToFire().rarity(Rarity.EPIC)));
 
     public static final RegistryObject<Item> IGNITIUM_INGOT = ITEMS.register("ignitium_ingot",
             () -> new Item(new Item.Properties().group(cataclysm.CATACLYSM_GROUP).isImmuneToFire().rarity(Rarity.EPIC)));
@@ -117,10 +117,10 @@ public class ModItems {
             () -> new The_Incinerator(cataclysm.PROXY.setupISTER(new Item.Properties().maxStackSize(1).rarity(Rarity.EPIC).isImmuneToFire().group(cataclysm.CATACLYSM_GROUP))));
 
     public static final RegistryObject<Item> FINAL_FRACTAL = ITEMS.register("final_fractal",
-            () -> new final_fractal(ModItemTier.TOOL_WITHERITE, new Item.Properties().group(cataclysm.CATACLYSM_GROUP).isImmuneToFire().rarity(Rarity.EPIC)));
+            () -> new final_fractal(ModItemTier.TOOL_WITHERITE, new Item.Properties().isImmuneToFire().rarity(Rarity.EPIC)));
 
     public static final RegistryObject<Item> ZWEIENDER = ITEMS.register("zweiender",
-            () -> new zweiender(ModItemTier.TOOL_ENDERITE, new Item.Properties().group(cataclysm.CATACLYSM_GROUP).isImmuneToFire().rarity(Rarity.EPIC)));
+            () -> new zweiender(ModItemTier.TOOL_ENDERITE, new Item.Properties().isImmuneToFire().rarity(Rarity.EPIC)));
 
     public static final RegistryObject<Item> INFERNAL_FORGE = ITEMS.register("infernal_forge",
             () -> new infernal_forge(ItemTier.NETHERITE, new Item.Properties().group(cataclysm.CATACLYSM_GROUP).isImmuneToFire().rarity(Rarity.EPIC)));
@@ -162,7 +162,7 @@ public class ModItems {
             () -> new Monstrous_Helm(ArmorMaterial.NETHERITE, EquipmentSlotType.HEAD, new Item.Properties().group(cataclysm.CATACLYSM_GROUP).isImmuneToFire().rarity(Rarity.EPIC)));
 
     public static final RegistryObject<Item> BURNING_ASHES = ITEMS.register("burning_ashes",
-            () -> new Item(new Item.Properties().group(cataclysm.CATACLYSM_GROUP).isImmuneToFire()));
+            () -> new Item(new Item.Properties().group(cataclysm.CATACLYSM_GROUP).isImmuneToFire().rarity(Rarity.RARE)));
 
     public static final RegistryObject<Item> MUSIC_DISC_NETHERITE_MONSTROSITY = ITEMS.register("music_disc_netherite_monstrosity",
             () -> new MusicDiscItem(14, ModSounds.MONSTROSITY_MUSIC,new Item.Properties().group(cataclysm.CATACLYSM_GROUP).maxStackSize(1).rarity(Rarity.EPIC).isImmuneToFire()));

@@ -75,6 +75,18 @@ public class Ignitium_Armor extends ArmorItem {
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        if (this.slot == EquipmentSlotType.HEAD) {
+            tooltip.add(new TranslationTextComponent("item.cataclysm.ignitium_helmet.desc").mergeStyle(TextFormatting.DARK_GREEN));
+        }
+        if (this.slot == EquipmentSlotType.CHEST) {
+            tooltip.add(new TranslationTextComponent("item.cataclysm.ignitium_chestplate.desc").mergeStyle(TextFormatting.DARK_GREEN));
+        }
+        if (this.slot == EquipmentSlotType.LEGS) {
+            tooltip.add(new TranslationTextComponent("item.cataclysm.ignitium_leggings.desc").mergeStyle(TextFormatting.DARK_GREEN));
+        }
+        if (this.slot == EquipmentSlotType.FEET) {
+            tooltip.add(new TranslationTextComponent("item.cataclysm.ignitium_boots.desc").mergeStyle(TextFormatting.DARK_GREEN));
+        }
 
     }
 }

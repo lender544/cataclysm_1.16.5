@@ -31,8 +31,8 @@ public class CMItemstackRenderer extends ItemStackTileEntityRenderer {
     public void func_239207_a_(ItemStack itemStackIn, ItemCameraTransforms.TransformType p_239207_2_, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
         if (itemStackIn.getItem() == ModItems.BULWARK_OF_THE_FLAME.get()) {
             matrixStackIn.push();
-            matrixStackIn.translate(0.4F, -0.75F, 0.5F);
-            matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-180));
+            matrixStackIn.translate(0.5F, 0.5F, 0.5F);
+            matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-180));
             BULWARK_OF_THE_FLAME_MODEL.render(matrixStackIn, bufferIn.getBuffer(RenderType.getEntityCutoutNoCull(BULWARK_OF_THE_FLAME_TEXTURE)), combinedLightIn, combinedOverlayIn, 1.0F, 1.0F, 1.0F, 1.0F);
             matrixStackIn.pop();
         }

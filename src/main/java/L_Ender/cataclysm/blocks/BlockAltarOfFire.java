@@ -26,7 +26,6 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 public class BlockAltarOfFire extends ContainerBlock {
-    private static final VoxelShape SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 21.0D, 16.0D);
 
     public BlockAltarOfFire(Properties props) {
         super(props);
@@ -67,19 +66,6 @@ public class BlockAltarOfFire extends ContainerBlock {
             return ActionResultType.SUCCESS;
         }
         return ActionResultType.PASS;
-    }
-
-
-    public VoxelShape getRayTraceShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
-        return SHAPE;
-    }
-
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return SHAPE;
-    }
-
-    public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return SHAPE;
     }
 
     @Nullable
