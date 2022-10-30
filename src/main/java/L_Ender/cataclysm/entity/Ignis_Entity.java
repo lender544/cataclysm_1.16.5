@@ -19,6 +19,7 @@ import com.github.alexthe666.citadel.animation.AnimationHandler;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -27,11 +28,14 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.BodyController;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -45,6 +49,7 @@ import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
@@ -53,6 +58,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.BossInfo;
@@ -150,6 +156,7 @@ public class Ignis_Entity extends Boss_monster {
     private int CanSpin = 0;
 
     private int timeWithoutTarget;
+    private int blockBreakCounter;
     public float blockingProgress;
     public float swordProgress;
     public float prevblockingProgress;
@@ -299,7 +306,7 @@ public class Ignis_Entity extends Boss_monster {
         }
 
         if (source.getImmediateSource() instanceof Ignis_Abyss_Fireball_Entity) {
-            if(!(source.getTrueSource() instanceof Ignis_Entity)) {
+            if(!(source.getTrueSource() instanceof Ignis_Entity) && source.getTrueSource() != null ) {
                 this.playSound(ModSounds.IGNIS_ARMOR_BREAK.get(), 1.0F, 0.8F);
                 if (!world.isRemote) {
                     if (this.getShieldDurability() < 3) {
@@ -332,7 +339,6 @@ public class Ignis_Entity extends Boss_monster {
         }
         if (damage > 0.0F && this.canBlockDamageSource(source)) {
             this.damageShield(damage);
-
             if (!source.isProjectile()) {
                 if (entity instanceof LivingEntity) {
                     this.blockUsingShield((LivingEntity) entity);
@@ -341,7 +347,9 @@ public class Ignis_Entity extends Boss_monster {
             this.playSound(SoundEvents.ENTITY_BLAZE_HURT, 0.5f, 0.4F + this.getRNG().nextFloat() * 0.1F);
             return false;
         }
-
+        if (this.blockBreakCounter <= 0) {
+            this.blockBreakCounter = 20;
+        }
         return super.attackEntityFrom(source, damage);
     }
 
@@ -480,6 +488,23 @@ public class Ignis_Entity extends Boss_monster {
         return 1.0F;
     }
 
+    public boolean func_230285_a_(Fluid p_230285_1_) {
+        return p_230285_1_.isIn(FluidTags.LAVA);
+    }
+
+
+    private void func_234318_eL() {
+        if (this.isInLava()) {
+            ISelectionContext lvt_1_1_ = ISelectionContext.forEntity(this);
+            if (lvt_1_1_.func_216378_a(FlowingFluidBlock.LAVA_COLLISION_SHAPE, this.getPosition().down(), true) && !this.world.getFluidState(this.getPosition().up()).isTagged(FluidTags.LAVA)) {
+                this.onGround = true;
+            } else {
+                this.setMotion(this.getMotion().scale(0.5D).add(0.0D, rand.nextFloat() * 0.5, 0.0D));
+            }
+        }
+
+    }
+
     public boolean onLivingFall(float distance, float damageMultiplier) {
         return false;
     }
@@ -514,6 +539,7 @@ public class Ignis_Entity extends Boss_monster {
         this.bossInfo.setPercent(this.getHealth() / this.getMaxHealth());
         prevblockingProgress = blockingProgress;
         prevswordProgress = swordProgress;
+        func_234318_eL();
         if (this.getIsBlocking() && blockingProgress < 10F) {
             blockingProgress++;
         }
@@ -715,7 +741,7 @@ public class Ignis_Entity extends Boss_monster {
                 }
             }
         }
-
+        blockbreak();
         super.tick();
         AnimationHandler.INSTANCE.updateAnimations(this);
 
@@ -1335,6 +1361,35 @@ public class Ignis_Entity extends Boss_monster {
         }
     }
 
+    private void blockbreak(){
+        if (this.blockBreakCounter > 0) {
+            --this.blockBreakCounter;
+            if (this.blockBreakCounter == 0 && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
+                int i1 = MathHelper.floor(this.getPosY());
+                int l1 = MathHelper.floor(this.getPosX());
+                int i2 = MathHelper.floor(this.getPosZ());
+                boolean flag = false;
+                for(int k2 = -1; k2 <= 1; ++k2) {
+                    for(int l2 = -1; l2 <= 1; ++l2) {
+                        for(int j = 0; j <= 3; ++j) {
+                            int i3 = l1 + k2;
+                            int k = i1 + j;
+                            int l = i2 + l2;
+                            BlockPos blockpos = new BlockPos(i3, k, l);
+                            BlockState blockstate = this.world.getBlockState(blockpos);
+                            if (blockstate.canEntityDestroy(this.world, blockpos, this)  && !BlockTags.getCollection().get(ModTag.IGNIS_IMMUNE).contains(blockstate.getBlock()) && net.minecraftforge.event.ForgeEventFactory.onEntityDestroyBlock(this, blockpos, blockstate)) {
+                                flag = this.world.destroyBlock(blockpos, true, this) || flag;
+                            }
+                        }
+                    }
+                }
+                if (flag) {
+                    this.world.playEvent((PlayerEntity)null, 1022, this.getPosition(), 0);
+                }
+            }
+        }
+    }
+
     @Nullable
     public Animation getDeathAnimation()
     {
@@ -1640,7 +1695,7 @@ public class Ignis_Entity extends Boss_monster {
                     Cm_Falling_Block_Entity fallingBlockEntity = new Cm_Falling_Block_Entity(world, hitX + 0.5D, hitY + 1.0D, hitZ + 0.5D, block,10);
                     fallingBlockEntity.addVelocity(0, 0.2D + getRNG().nextGaussian() * 0.15D, 0);
                     world.addEntity(fallingBlockEntity);
-                    ITag<Block> Tag = BlockTags.getCollection().get(ModTag.IGNIS_CAN_DESTROY);
+                    ITag<Block> Tag = BlockTags.getCollection().get(ModTag.IGNIS_CAN_DESTROY_CRACKED_BLOCK);
                     if (!this.world.isRemote && Tag.contains(block2)) {
                         if (CMConfig.IgnisBlockBreaking) {
                             this.world.destroyBlock(pos, false, this);
@@ -1700,11 +1755,11 @@ public class Ignis_Entity extends Boss_monster {
         BlockState block = world.getBlockState(pos);
         Block block2 = block.getBlock();
         BlockState blockAbove = world.getBlockState(abovePos);
-        if (block.getMaterial() != Material.AIR && !block.getBlock().hasTileEntity(block) && !blockAbove.getMaterial().blocksMovement() && !BlockTags.getCollection().get(ModTag.NETHERITE_MONSTROSITY_IMMUNE).contains(block.getBlock())) {
+        if (block.getMaterial() != Material.AIR && !block.getBlock().hasTileEntity(block) && !blockAbove.getMaterial().blocksMovement()) {
             Cm_Falling_Block_Entity fallingBlockEntity = new Cm_Falling_Block_Entity(world, hitX + 0.5D, hitY + 1.0D, hitZ + 0.5D, block,10);
             fallingBlockEntity.addVelocity(0, 0.2D + getRNG().nextGaussian() * 0.15D, 0);
             world.addEntity(fallingBlockEntity);
-            ITag<Block> Tag = BlockTags.getCollection().get(ModTag.IGNIS_CAN_DESTROY);
+            ITag<Block> Tag = BlockTags.getCollection().get(ModTag.IGNIS_CAN_DESTROY_CRACKED_BLOCK);
             if (!this.world.isRemote && Tag.contains(block2)) {
                 if (CMConfig.IgnisBlockBreaking) {
                     this.world.destroyBlock(pos, false, this);
@@ -1912,6 +1967,17 @@ public class Ignis_Entity extends Boss_monster {
                 }
             }
         }
+    }
+
+    @Override
+    public ItemEntity entityDropItem(ItemStack stack) {
+        ItemEntity itementity = this.entityDropItem(stack, 0.0F);
+        if (itementity != null) {
+            itementity.setMotion(itementity.getMotion().mul(0.0, 1.5, 0.0));
+            itementity.setGlowing(true);
+            itementity.setNoDespawn();
+        }
+        return itementity;
     }
 
     public void travel(Vector3d travelVector) {
